@@ -1,0 +1,13 @@
+\begin{tabular}{lllllllll}
+\toprule
+{} &               $\dkl_{0.1}$ &                        kNN &               $\ell$-Trust &                $\ell$-RMSE &               $\dkl_{100}$ &                      Spear &                        MSE & $\langle \text{rank} \rangle$ \\
+\midrule
+GeomAE         &               \textbf{3.2} &                        3.8 &               \textbf{2.6} &                        3.4 &   \underline{\textbf{2.2}} &                        3.8 &                        3.4 &                  \textbf{3.2} \\
+Vanilla        &                        5.4 &                        5.4 &                        4.6 &                        6.2 &                        4.2 &                        5.0 &               \textbf{2.0} &                         4.686 \\
+TopoReg        &   \underline{\textbf{2.6}} &                        4.8 &                        4.4 &                        4.8 &               \textbf{2.2} &               \textbf{1.8} &                        3.6 &                         3.457 \\
+ParametricUMAP &                        4.4 &   \underline{\textbf{1.2}} &   \underline{\textbf{1.0}} &               \textbf{2.4} &                        6.0 &                        4.8 &   \underline{\textbf{1.0}} &    \underline{\textbf{2.971}} \\
+UMAP           &                        5.0 &                        3.6 &                        4.0 &   \underline{\textbf{1.8}} &                        6.0 &                        4.0 &                        nan &                           nan \\
+TSNE           &                        3.8 &               \textbf{2.2} &                        4.4 &                        6.8 &                        3.6 &                        7.0 &                        nan &                           nan \\
+PCA            &                        3.6 &                        7.0 &                        7.0 &                        2.6 &                        3.8 &   \underline{\textbf{1.6}} &                        5.0 &                         4.371 \\
+\bottomrule
+\end{tabular}

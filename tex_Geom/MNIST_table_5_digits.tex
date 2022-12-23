@@ -1,0 +1,13 @@
+\begin{tabular}{llllllll}
+\toprule
+{} &                             $\dkl_{0.1}$ &                                        kNN &                               $\ell$-Trust &                            $\ell$-RMSE &                               $\dkl_{100}$ &                                  Spear &                                        MSE \\
+\midrule
+GeomAE         &                        0.169 $\pm$ 0.023 &                          0.356 $\pm$ 0.007 &                          0.938 $\pm$ 0.003 &                 \textbf{6.2 $\pm$ 1.2} &                        2.2e-07 $\pm$ 3e-08 &                         0.4 $\pm$ 0.02 &                        0.0357 $\pm$ 0.0003 \\
+Vanilla        &               \textbf{0.133 $\pm$ 0.007} &                           0.322 $\pm$ 0.01 &                           0.93 $\pm$ 0.004 &                             11 $\pm$ 3 &                        1.8e-07 $\pm$ 2e-08 &                        0.44 $\pm$ 0.05 &               \textbf{0.0356 $\pm$ 0.0007} \\
+TopoReg        &   \underline{\textbf{0.094 $\pm$ 0.003}} &                          0.311 $\pm$ 0.005 &                          0.925 $\pm$ 0.002 &                        8.91 $\pm$ 0.05 &   \underline{\textbf{9.3e-08 $\pm$ 6e-09}} &   \underline{\textbf{0.64 $\pm$ 0.01}} &                        0.03701 $\pm$ 8e-05 \\
+ParametricUMAP &                      0.1719 $\pm$ 0.0051 &   \underline{\textbf{0.4162 $\pm$ 0.0012}} &   \underline{\textbf{0.9524 $\pm$ 0.0004}} &                          8.4 $\pm$ 0.4 &                     3.35e-07 $\pm$ 2.1e-08 &                       0.36 $\pm$ 0.007 &   \underline{\textbf{0.03213 $\pm$ 7e-05}} \\
+UMAP           &                         0.19 $\pm$ 0.002 &                        0.4013 $\pm$ 0.0003 &             \textbf{0.94638 $\pm$ 0.00051} &   \underline{\textbf{4.79 $\pm$ 0.03}} &                        4.1e-07 $\pm$ 1e-08 &                    0.3377 $\pm$ 0.0042 &                                        NaN \\
+TSNE           &                        0.168 $\pm$ 0.031 &                 \textbf{0.404 $\pm$ 0.003} &                        0.9443 $\pm$ 0.0005 &                         39.8 $\pm$ 0.1 &                        2.9e-07 $\pm$ 4e-08 &                         0.3 $\pm$ 0.03 &                                        NaN \\
+PCA            &                 0.16276402 $\pm$ 2.2e-07 &                     0.117955 $\pm$ 1.1e-06 &                      0.7456815 $\pm$ 5e-07 &                  6.5830853 $\pm$ 8e-07 &          \textbf{1.636274e-07 $\pm$ 2e-13} &         \textbf{0.5246475 $\pm$ 7e-07} &                    0.055636764 $\pm$ 8e-09 \\
+\bottomrule
+\end{tabular}
