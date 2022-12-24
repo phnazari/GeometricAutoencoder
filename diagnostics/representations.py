@@ -17,7 +17,8 @@ def plot_latent_space(model,
                       output_path=None,
                       writer=None,
                       latent_activations=None,
-                      labels=None):
+                      labels=None,
+                      with_legend=False):
     print("[Analyse] latent representation...")
 
     if latent_activations is None:
@@ -35,9 +36,7 @@ def plot_latent_space(model,
     latent_activations = latent_activations.detach().cpu().numpy()
     labels = labels.detach().cpu().numpy()
 
-    # fig, ax = plt.subplots(figsize=(10, 5))
     fig, ax = plt.subplots(figsize=(5, 5))
-    # fig.suptitle("Latent Space")
 
     ax.set_aspect("equal")
     ax.axis("off")
@@ -50,7 +49,7 @@ def plot_latent_space(model,
                          cmap=cmap,
                          **get_sc_kwargs())
 
-    if False:
+    if with_legend:
         if dataset == "Earth":
             handles, _ = scatter.legend_elements(num=None)
 
@@ -64,19 +63,19 @@ def plot_latent_space(model,
             ax.set_position([0.1, 0, chartBox.width, chartBox.height])
 
             string_labels = Zilionis().transform_labels(
-                "/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/zilionis")
+                os.path.join(os.path.dirname(__file__), '..', "data/raw/zilionis"))
             ax.legend(handles, string_labels, title="labels", loc="center left", bbox_to_anchor=(1, 0.5))
         elif dataset == "PBMC":
             handles, _ = scatter.legend_elements(num=None)
 
             string_labels = PBMC().transform_labels(
-                "/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/pbmc")
+                os.path.join(os.path.dirname(__file__), '..', "data/raw/pbmc"))
             ax.legend(handles, string_labels, title="labels", loc="center left", bbox_to_anchor=(1, 0.5))
         elif dataset == "CElegans":
             handles, _ = scatter.legend_elements(num=None)
 
             string_labels = CElegans().transform_labels(
-                "/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/celegans")
+                os.path.join(os.path.dirname(__file__), '..', "data/raw/celegans"))
 
             chartBox = ax.get_position()
             ax.set_position([0, 0, chartBox.width, chartBox.height])
@@ -115,10 +114,6 @@ def plot_dataset(model,
     idx0 = 45636
     coords0 = inputs[idx0]
 
-    # coords0 = coords0
-    # dists = torch.squeeze(torch.cdist(coords0[None, :], inputs))
-    # indicatrix_idx = torch.argwhere(dists <= 0.6)
-
     """
     PLOTTING
     """
@@ -140,8 +135,6 @@ def plot_dataset(model,
     ax.add_patch(p)
     pathpatch_2d_to_3d(p, z=0, normal=tuple(coords0.cpu()))
     pathpatch_translate(p, tuple(coords0.cpu()))
-
-    # ax.scatter(inputs[indicatrix_idx, 0], inputs[indicatrix_idx, 1], inputs[indicatrix_idx, 2])
 
     transform_axes(ax)
 
@@ -187,15 +180,12 @@ def plot_reconstruction(model,
 
     if input_dim == 784:
         fig_sum, (ax1, ax3) = plt.subplots(1, 2, figsize=(5, 5))
-        # fig_sum.suptitle(f"Input/Output comparison")
 
         ax1.imshow(inputs)
         ax1.set_aspect("equal")
-        # ax1.set_title("input")
 
         ax3.imshow(outputs)
         ax3.set_aspect("equal")
-        # ax3.set_title(r"output")
     elif input_dim == 3:
         fig_sum = plt.figure()
         ax1 = fig_sum.add_subplot(1, 3, 1, projection='3d')

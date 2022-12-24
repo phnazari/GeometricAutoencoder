@@ -19,4 +19,5 @@ experiments/train_model/speed
 experiments/fit_competitor/evaluation
 experiments/fit_competitor/geometric_loss
 experiments/fit_competitor/speed
+tex_Geom
 

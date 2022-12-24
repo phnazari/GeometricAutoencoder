@@ -9,7 +9,8 @@ os.environ["GEOMSTATS_BACKEND"] = "pytorch"
 import torch
 from matplotlib import pyplot as plt
 import dateutil.parser
-from util import get_saving_kwargs
+from AutoEncoderVisualization.util import get_saving_kwargs
+from src.models.submodules import ELUUMAPAutoEncoder
 
 encoder_name = "sqrt"
 
@@ -20,32 +21,37 @@ def convert():
     paths = []
 
     for subdir, dirs, _ in os.walk(
-            "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/fit_competitor/evaluation/repetitions/"):
+            os.path.join(os.path.dirname(__file__), '..', 'experiments/fit_competitor/evaluation/repetitions/')):
 
         if len(subdir.split("/")) == 15 and subdir.split("/")[-1] == "ParametricUMAP":
             paths.append(subdir)
 
-    from AutoEncoderVisualization.models import ELUUMAPAutoEncoder
+    # from AutoEncoderVisualization.models import ELUUMAPAutoEncoder
 
     for i, path in enumerate(paths):
         print(f"{i} of {len(paths)}")
 
         model = path.split("/")[-2]
-        print(model)
 
         if model in ["MNIST", "FashionMNIST"]:
             dimension = 784
+            input_dims = (1, 28, 28)
         elif model == "Zilionis_normalized":
             dimension = 306
+            input_dims = (1, 306)
         elif model == "PBMC":
             dimension = 50
+            input_dims = (1, 50)
         elif model == "CElegans":
             dimension = 100
+            input_dims = (1, 100)
         elif model == "Earth":
             continue
 
         embedder = load_ParametricUMAP(os.path.join(path, "model"))
-        model = ELUUMAPAutoEncoder(input_shape=dimension, latent_dim=2)
+
+        # model = ELUUMAPAutoEncoder(input_shape=dimension, latent_dim=2)
+        model = ELUUMAPAutoEncoder(input_dims=input_dims, input_shape=dimension, latent_dim=2)
 
         model.encoder[1].weight = torch.nn.Parameter(torch.from_numpy(embedder.encoder.layers[2].weights[0].numpy()).T)
         model.encoder[3].weight = torch.nn.Parameter(torch.from_numpy(embedder.encoder.layers[3].weights[0].numpy()).T)
@@ -69,29 +75,18 @@ def convert():
         model.decoder[7].bias = torch.nn.Parameter(torch.from_numpy(embedder.decoder.layers[4].bias.numpy()))
         model.decoder[9].bias = torch.nn.Parameter(torch.from_numpy(embedder.decoder.layers[5].bias.numpy()))
 
-        torch.save(model.state_dict(), os.path.join(path, "model_state.pth"))
+        torch.save(model.state_dict(), os.path.join(path, "model_state_new.pth"))
 
 
 def plot_loss_curves():
-    paths = [
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep1/MNIST/Vanilla/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep2/MNIST/Vanilla/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep3/MNIST/Vanilla/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep4/MNIST/Vanilla/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep5/MNIST/Vanilla/geometric_loss.pth",
+    models = ["Vanilla", "TopoReg", "GeomReg"]
+    paths = []
 
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep1/MNIST/GeomReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep2/MNIST/GeomReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep3/MNIST/GeomReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep4/MNIST/GeomReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep5/MNIST/GeomReg/geometric_loss.pth",
-
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep1/MNIST/TopoReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep2/MNIST/TopoReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep3/MNIST/TopoReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep4/MNIST/TopoReg/geometric_loss.pth",
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/geometric_loss/repetitions/rep5/MNIST/TopoReg/geometric_loss.pth",
-    ]
+    for model in models:
+        for rep in range(1, 6):
+            path = os.path.join(os.path.dirname(__file__), '..',
+                                f'experiments/train_model/geometric_loss/repetitions/rep{rep}/MNIST/{model}/geometric_loss.pth')
+            paths.append(path)
 
     losses = {
         "Vanilla": [],
@@ -133,7 +128,7 @@ def plot_loss_curves():
 
     plt.legend(loc="best")
 
-    output_path = "/export/home/pnazari/workspace/AutoEncoderVisualization/tests/output/graphics/MNIST/Loss/geometric_loss.png"
+    output_path = "exp/output/graphics/MNIST/Loss/geometric_loss.png"
     plt.savefig(output_path, **get_saving_kwargs())
 
     plt.show()
@@ -143,12 +138,12 @@ def calculate_runtime():
     paths = []
 
     for subdir, dirs, _ in os.walk(
-            "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/speed/repetitions/"):
+            os.path.join(os.path.dirname(__file__), '..', "experiments/train_model/speed/repetitions/")):
         if len(subdir.split("/")) == 15:
             paths.append(os.path.join(subdir, "run.json"))
 
     for subdir, dirs, _ in os.walk(
-            "/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/fit_competitor/speed/repetitions/"):
+            os.path.join(os.path.dirname(__file__), '..', "experiments/fit_competitor/speed/repetitions/")):
         if len(subdir.split("/")) == 15:
             paths.append(os.path.join(subdir, "run.json"))
 
@@ -189,3 +184,6 @@ def calculate_runtime():
         std_minutes = torch.std(minutes, dim=0)
 
         print(model, mean_minutes, std_minutes)
+
+
+convert()

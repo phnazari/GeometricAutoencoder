@@ -15,15 +15,10 @@ from diffgeo.connections import LeviCivitaConnection
 from sklearn.decomposition import PCA
 
 from util import (get_sc_kwargs,
-                  get_hull,
-                  in_hull,
                   get_coordinates,
-                  symlog,
                   values_in_quantile,
                   determine_scaling_fn,
-                  join_plots,
-                  minmax,
-                  cmap_labels, get_saving_kwargs)
+                  get_saving_kwargs)
 
 
 def plot_determinants(model,
@@ -76,7 +71,6 @@ def plot_determinants(model,
 
         middle_idx = values_in_quantile(determinants, quantile)
         determinants_in_quantile = determinants[middle_idx]
-        coordinates_in_quantile = coordinates[middle_idx]
 
         min_determinant_in_quantile = torch.min(determinants_in_quantile)
         max_determinant_in_quantile = torch.max(determinants_in_quantile)
@@ -98,25 +92,9 @@ def plot_determinants(model,
 
     dets_scaled[torch.isinf(dets_scaled)] = -44
 
-    # determinants_relative = determinants / torch.mean(determinants)
     determinants_relative = dets_scaled / torch.mean(dets_scaled)
 
-    # dets_scaled = scaling_fn(determinants_relative)
-    # dets_scaled = determinants_relative
-    # dets_scaled = minmax(dets_scaled)
-
-    # dets_scaled = minmax(determinants_relative)
     dets_scaled = determinants_relative - 1
-
-    print(dataset_name, model_name, torch.min(dets_scaled[~torch.isnan(dets_scaled)]),
-          torch.max(dets_scaled[~torch.isnan(dets_scaled)]))
-
-    # dets_scaled[dets_scaled <= -3.499] = -3.499
-    # dets_scaled[dets_scaled >= 2.499] = 2.499
-
-    # dets_scaled = dets_scaled / torch.max(torch.abs(dets_scaled))
-
-    # only consider quantile
 
     """
     PLOTTING
@@ -135,8 +113,6 @@ def plot_determinants(model,
     ax.axis("off")
     fig.tight_layout(pad=0.)
     plt.margins(0.01, 0.01)
-
-    # fig_col.suptitle(f"{prefix}Determinants")
 
     scatter = ax.scatter(coordinates[:, 0],
                          coordinates[:, 1],
@@ -166,7 +142,6 @@ def plot_determinants(model,
 
     if writer is not None:
         writer.add_figure("determinants/colorcode", fig)
-        # writer.add_figure("determinants/histogram", fig_hist)
 
 
 def plot_indicatrices(model,
@@ -198,12 +173,6 @@ def plot_indicatrices(model,
     perm = torch.randperm(labels.shape[0], generator=generator)
     latent_activations = latent_activations[perm]
     labels = labels[perm]
-
-    # test = torch.argwhere(labels == 3)
-
-    # for i, l in enumerate(latent_activations):
-    #    if 10 <= l[0] <= 20 and 10 <= l[1] <= 20:
-    #        print(i)
 
     idx0 = 45636
     coords0 = latent_activations[idx0]
@@ -249,10 +218,6 @@ def plot_indicatrices(model,
 
         max_vector_norm = torch.min(torch.linalg.norm(vector_patches.view(-1, 2), dim=1))
     else:
-        # inputs = inputs.view(inputs.shape[0], -1)
-        # pca = PCA(n_components=2)
-        # pca.fit(inputs)
-
         # the angles
         phi = torch.linspace(0., 2 * np.pi, num_gon)
 
@@ -277,8 +242,6 @@ def plot_indicatrices(model,
         else:
             scaling_factor = 1 / 10
 
-    print(scaling_factor, dataset_name)
-
     normed_vector_patches = vector_patches / max_vector_norm * stepsize * scaling_factor  # / 3
     anchored_vector_patches = coordinates.unsqueeze(1).expand(*normed_vector_patches.shape) + normed_vector_patches
 
@@ -302,10 +265,6 @@ def plot_indicatrices(model,
     plt.margins(0.01, 0.01)
 
     ax.scatter(latent_activations[:, 0], latent_activations[:, 1], c=labels, cmap=cmap, **get_sc_kwargs())
-    # ax.scatter(coordinates[:, 0].cpu(), coordinates[:, 1].cpu(), marker=".", c="black")
-
-    # if coords0 is not None:
-    # ax.scatter(coords0[0].cpu(), coords0[1].cpu(), marker=".", c="r")
 
     p = PatchCollection(polygons)
 

@@ -38,18 +38,16 @@ BIGGEST_LOWER_EPSILON = 1e-10
 UPPER_EPSILON = 1e20
 SMALLER_UPPER_EPSILON = 1e12
 
+output_path = "exp/output"
 
-def init():
-    global topomodel
-    topomodel = False
-
-output_path = "/export/home/pnazari/workspace/AutoEncoderVisualization/tests/output"
 
 def get_logdir(subdir):
     if subdir:
-        return os.path.join(output_path, f"runs/{datetime.now().strftime('%Y.%m.%d')}/{subdir}/{datetime.now().strftime('%Y.%m.%d-%H:%M:%S')}")
+        return os.path.join(output_path,
+                            f"runs/{datetime.now().strftime('%Y.%m.%d')}/{subdir}/{datetime.now().strftime('%Y.%m.%d-%H:%M:%S')}")
     else:
-        return os.path.join(output_path, f"runs/{datetime.now().strftime('%Y.%m.%d')}/{datetime.now().strftime('%Y.%m.%d-%H:%M:%S')}")
+        return os.path.join(output_path,
+                            f"runs/{datetime.now().strftime('%Y.%m.%d')}/{datetime.now().strftime('%Y.%m.%d-%H:%M:%S')}")
 
 
 def get_summary_writer(subdir=None):

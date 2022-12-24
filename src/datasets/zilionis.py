@@ -15,7 +15,7 @@ class Zilionis(custom.Zilionis):
 
     def __init__(self, train=True):
         """MNIST dataset normalized."""
-        super().__init__(dir_path="/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/zilionis",
+        super().__init__(dir_path=os.path.join(os.path.dirname(__file__), '..', '..', "data/raw/zilionis"),
                          train=train)
 
     def inverse_normalization(self, normalized):

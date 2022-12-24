@@ -501,7 +501,10 @@ class ELUUMAPAutoEncoder(AutoencoderModel):
             # elif arr[-1] not in ["weight", "bias"]:
             #    del dict[key]
             else:
-                new_key = ".".join(arr[1:])
+                if arr[0] == "autoencoder":
+                    new_key = ".".join(arr[1:])
+                else:
+                    new_key = key
 
                 new_dict.update({new_key: dict[key]})
 

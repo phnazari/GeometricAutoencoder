@@ -11,7 +11,7 @@ os.environ["GEOMSTATS_BACKEND"] = "pytorch"
 import torch
 from functorch import jacrev
 
-from util import preimage, Color, batch_jacobian
+from util import batch_jacobian
 
 from geomstats.geometry.manifold import Manifold
 

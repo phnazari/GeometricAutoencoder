@@ -11,13 +11,10 @@ from src.datasets.fashion_mnist import FashionMNIST
 from src.datasets.celegans import CElegans
 from src.datasets.zilionis import Zilionis
 from src.datasets.pbmc import PBMC
+from src.datasets.earth import Earth
 
-from data.custom import WoollyMammoth, Earth
 
-
-def load_data(train_batch_size=128, test_batch_size=32, dataset="MNIST", test_separate=False):
-    transform = torchvision.transforms.Compose([torchvision.transforms.ToTensor()])
-
+def load_data(train_batch_size=128, test_batch_size=32, dataset="MNIST"):
     test_separate = True
 
     if dataset == "MNIST":
@@ -36,10 +33,8 @@ def load_data(train_batch_size=128, test_batch_size=32, dataset="MNIST", test_se
         train_dataset = CElegans(train=True)
         test_dataset = CElegans(train=False)
     elif dataset == "Earth":
-        train_dataset = Earth(train=True,
-                              filename="/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/earth/landmass.pt")
-        test_dataset = Earth(train=False,
-                             filename="/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/earth/landmass.pt")
+        train_dataset = Earth(train=True)
+        test_dataset = Earth(train=False)
     else:
         return
 
@@ -72,12 +67,8 @@ def data_forward(model, test_loader):
         # do that in order to get activations at latent layer
         # print(batch_features.shape)
 
-        if model.__class__.__name__ in ["DeepAE", "ELUUMAPAutoEncoder"] and conf.topomodel:  # and False:  # and False
-            batch_features = batch_features.to(device)
-            output = model.forward_(batch_features)
-        else:
-            batch_features = batch_features.view(-1, model.input_dim).to(device)
-            output = model(batch_features)
+        batch_features = batch_features.to(device)
+        output = model.forward_(batch_features)
 
         if k == 0:
             inputs = batch_features
@@ -95,7 +86,7 @@ def data_forward(model, test_loader):
             else:
                 labels = torch.vstack((labels, batch_labels))
 
-    if model.__class__.__name__ in ["DeepAE", "ELUUMAPAutoEncoder"] and conf.topomodel:  # and False:
-        outputs = outputs.view(-1, model.input_dim)
+    # if model.__class__.__name__ in ["DeepAE", "ELUUMAPAutoEncoder"]:  # and False:
+    outputs = outputs.view(-1, model.input_dim)
 
     return inputs, outputs, latent_activations, labels

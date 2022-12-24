@@ -17,11 +17,7 @@ class Earth(custom.Earth):
     def __init__(self, train=True):
         """Earth dataset."""
         super().__init__(train=train,
-                         filename="/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/earth/landmass.pt")
-
-        # super().__init__(
-        #    filename="/export/home/pnazari/workspace/AutoEncoderVisualization/data/raw/earth/landmass.pt",
-        #    train=train)
+                         filename=os.path.join(os.path.dirname(__file__), '..', '..', "data/raw/earth/landmass.pt"))
 
     def inverse_normalization(self, normalized):
         """Inverse the normalization applied to the original data.

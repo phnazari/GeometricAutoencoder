@@ -80,9 +80,9 @@ def nested_dict():
 
 
 # CAVE: set the following paths accordingly!
-outpath = '/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/tex_Geom'  # 'tex'
-path_comp = '/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/train_model/evaluation/repetitions'
-path_ae = '/export/home/pnazari/workspace/AutoEncoderVisualization/lib/TopoAE/experiments/fit_competitor/evaluation/repetitions'
+outpath = '../tex_Geom'
+path_comp = '../experiments/train_model/evaluation/repetitions'
+path_ae = '../experiments/fit_competitor/evaluation/repetitions'
 
 Path(outpath).mkdir(exist_ok=True)
 
