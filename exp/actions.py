@@ -1,6 +1,9 @@
 import os
 from datetime import timedelta
 
+import numpy as np
+from matplotlib.cm import ScalarMappable
+from mpl_toolkits.axes_grid1 import make_axes_locatable
 from umap.parametric_umap import load_ParametricUMAP
 import json
 
@@ -9,8 +12,9 @@ os.environ["GEOMSTATS_BACKEND"] = "pytorch"
 import torch
 from matplotlib import pyplot as plt
 import dateutil.parser
-from AutoEncoderVisualization.util import get_saving_kwargs
+from util import get_saving_kwargs
 from src.models.submodules import ELUUMAPAutoEncoder
+import matplotlib as mpl
 
 encoder_name = "sqrt"
 
@@ -25,8 +29,6 @@ def convert():
 
         if len(subdir.split("/")) == 15 and subdir.split("/")[-1] == "ParametricUMAP":
             paths.append(subdir)
-
-    # from AutoEncoderVisualization.models import ELUUMAPAutoEncoder
 
     for i, path in enumerate(paths):
         print(f"{i} of {len(paths)}")
@@ -186,4 +188,50 @@ def calculate_runtime():
         print(model, mean_minutes, std_minutes)
 
 
-convert()
+def create_colorbar():
+    root_path = os.path.join(os.path.dirname(__file__), 'output/graphics/cbar')
+    sizes = [10, 15, 20, 25]
+
+    for size in sizes:
+        path = os.path.join(root_path, f'cbar_horizontal_{size}.png')
+
+        # Make a figure and axes with dimensions as desired.
+        fig = plt.figure(figsize=(8, 1.5))
+        ax1 = fig.add_axes([0.05, 0.75, 0.9, 0.15])
+
+        cmap = "turbo"
+        norm = mpl.colors.Normalize(vmin=-1.8, vmax=1.22)
+
+        cb1 = mpl.colorbar.ColorbarBase(ax1,
+                                        cmap=cmap,
+                                        norm=norm,
+                                        orientation='horizontal')
+
+        cb1.ax.tick_params(labelsize=size)
+        cb1.set_label('Scaled Generalized Jacobian Determinant', size=size)
+
+        plt.savefig(path, **get_saving_kwargs())
+
+        plt.show()
+
+    # Make a figure and axes with dimensions as desired.
+    # fig = plt.figure(figsize=(1.5, 8))
+    # ax1 = fig.add_axes([0.20, 0.05, 0.10, 0.9])
+
+    # cmap = "turbo"
+    # norm = mpl.colors.Normalize(vmin=-1.8, vmax=1.22)
+
+    # cb1 = mpl.colorbar.ColorbarBase(ax1,
+    #                                cmap=cmap,
+    #                                norm=norm,
+    #                                orientation='vertical')
+
+    # cb1.ax.tick_params(labelsize=20)
+    # cb1.set_label('Scaled Generalized Jacobian Determinant')
+
+    # plt.savefig(path2, **get_saving_kwargs())
+
+    # plt.show()
+
+
+create_colorbar()

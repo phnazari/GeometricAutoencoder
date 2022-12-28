@@ -104,10 +104,7 @@ def plot_determinants(model,
     dets_scaled = dets_scaled.detach().cpu()
 
     # plot color-coded determinants
-    if model_name == "GeomReg" and dataset_name == "MNIST":
-        fig, ax = plt.subplots(figsize=((5, 5)))
-    else:
-        fig, ax = plt.subplots(figsize=((5, 5)))
+    fig, ax = plt.subplots(figsize=((5, 5)))
 
     ax.set_aspect("equal")
     ax.axis("off")
@@ -121,16 +118,16 @@ def plot_determinants(model,
                          **get_sc_kwargs(),
                          vmin=-1.8, vmax=1.22)
 
-    if model_name == "GeomReg" and dataset_name == "MNIST":
-        divider = make_axes_locatable(ax)
-        cax = divider.append_axes("bottom", size="5%", pad=0.05)
-        sm = ScalarMappable()
-        sm.set_cmap("turbo")
-        sm.set_array(dets_scaled)  # determinants
-        sm.set_clim(-1.8, 1.22)
-        cbar = plt.colorbar(sm, cax=cax, orientation="horizontal")
-        cbar.set_alpha(0.5)
-        cbar.draw_all()
+    #if model_name == "GeomReg" and dataset_name == "MNIST":
+    #    divider = make_axes_locatable(ax)
+    #    cax = divider.append_axes("bottom", size="5%", pad=0.05)
+    #    sm = ScalarMappable()
+    #    sm.set_cmap("turbo")
+    #    sm.set_array(dets_scaled)  # determinants
+    #    sm.set_clim(-1.8, 1.22)
+    #    cbar = plt.colorbar(sm, cax=cax, orientation="horizontal")
+    #    cbar.set_alpha(0.5)
+    #    cbar.draw_all()
 
     ax.set_aspect("equal")
     ax.axis("off")

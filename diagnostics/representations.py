@@ -29,6 +29,8 @@ def plot_latent_space(model,
     latent_activations = latent_activations[perm]
     labels = labels[perm]
 
+    with_legend = True
+
     """
     Plotting
     """
@@ -36,7 +38,10 @@ def plot_latent_space(model,
     latent_activations = latent_activations.detach().cpu().numpy()
     labels = labels.detach().cpu().numpy()
 
-    fig, ax = plt.subplots(figsize=(5, 5))
+    if not with_legend:
+        fig, ax = plt.subplots(figsize=(5, 5))
+    else:
+        fig, ax = plt.subplots(figsize=(10, 5))
 
     ax.set_aspect("equal")
     ax.axis("off")
@@ -53,24 +58,27 @@ def plot_latent_space(model,
         if dataset == "Earth":
             handles, _ = scatter.legend_elements(num=None)
 
+            chartBox = ax.get_position()
+            ax.set_position([0, 0, chartBox.width, chartBox.height])
+
             # string_labels = Earth().transform_labels(labels)
             string_labels = ["Africa", "Europe", "Asia", "North America", "Australia", "South America"]
-            ax.legend(handles, string_labels, title="labels", loc="center left", bbox_to_anchor=(1, 0.5))
+            ax.legend(handles, string_labels, loc="center left", bbox_to_anchor=(1, 0.5))
         elif dataset == "Zilionis":
             handles, _ = scatter.legend_elements(num=None)
 
             chartBox = ax.get_position()
-            ax.set_position([0.1, 0, chartBox.width, chartBox.height])
+            ax.set_position([0, 0, chartBox.width, chartBox.height])
 
             string_labels = Zilionis().transform_labels(
                 os.path.join(os.path.dirname(__file__), '..', "data/raw/zilionis"))
-            ax.legend(handles, string_labels, title="labels", loc="center left", bbox_to_anchor=(1, 0.5))
+            ax.legend(handles, string_labels, loc="center left", bbox_to_anchor=(1, 0.5))
         elif dataset == "PBMC":
             handles, _ = scatter.legend_elements(num=None)
 
             string_labels = PBMC().transform_labels(
                 os.path.join(os.path.dirname(__file__), '..', "data/raw/pbmc"))
-            ax.legend(handles, string_labels, title="labels", loc="center left", bbox_to_anchor=(1, 0.5))
+            ax.legend(handles, string_labels, loc="center left", bbox_to_anchor=(1, 0.5))
         elif dataset == "CElegans":
             handles, _ = scatter.legend_elements(num=None)
 
@@ -80,10 +88,10 @@ def plot_latent_space(model,
             chartBox = ax.get_position()
             ax.set_position([0, 0, chartBox.width, chartBox.height])
 
-            ax.legend(handles, string_labels, title="labels", loc="center left", bbox_to_anchor=(1, 0.5), ncol=2)
+            ax.legend(handles, string_labels, loc="center left", bbox_to_anchor=(1, 0.5), ncol=2)
             scatter.legend_elements(prop="colors", num=37)
         else:
-            ax.legend(*scatter.legend_elements(num=None), title="labels", loc="center left", bbox_to_anchor=(1, 0.5))
+            ax.legend(*scatter.legend_elements(num=None), loc="center left", bbox_to_anchor=(1, 0.5))
 
     if output_path is not None:
         plt.savefig(output_path, **get_saving_kwargs())

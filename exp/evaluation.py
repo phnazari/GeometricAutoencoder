@@ -7,8 +7,8 @@ import conf
 import numpy as np
 import torch
 
-from AutoEncoderVisualization.diagnostics.metric_properties import plot_determinants, plot_indicatrices
-from AutoEncoderVisualization.diagnostics.representations import plot_latent_space, plot_dataset
+from diagnostics.metric_properties import plot_determinants, plot_indicatrices
+from diagnostics.representations import plot_latent_space, plot_dataset
 
 from src.models.submodules import ELUUMAPAutoEncoder
 

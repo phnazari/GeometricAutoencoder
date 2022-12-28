@@ -8,28 +8,28 @@ from evaluation import evaluate
 model_paths = []
 
 datasets = [
-    "MNIST",
+    # "MNIST",
     # "Earth",
     # "FashionMNIST",
     # "CElegans",
-    # "Zilionis_normalized",
+    "Zilionis_normalized",
     # "PBMC"
 ]
 
 models = [
-    "Vanilla",
+    # "Vanilla",
     # "TopoReg",
-    # "GeomReg",
+    "GeomReg",
     # "PCA",
     # "TSNE",
     # "UMAP",
-    "ParametricUMAP"
+    # "ParametricUMAP"
 ]
 
 diagnostics = [
-    "indicatrices",
+    # "indicatrices",
     # "determinants",
-    # "embedding"
+    "embedding"
 ]
 
 base = os.path.join(os.path.dirname(__file__), '..', "experiments")

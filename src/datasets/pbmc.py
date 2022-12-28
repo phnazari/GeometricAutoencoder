@@ -8,7 +8,7 @@ from torch.utils.data import Dataset
 from torchvision import datasets
 from torchvision import transforms
 
-from AutoEncoderVisualization.data import custom
+from data import custom
 
 
 class PBMC(custom.PBMC):
