@@ -28,7 +28,7 @@
           306
         ]
       },
-      "autoencoder_model": "ELUUMAPAutoEncoder"
+      "autoencoder_model": "BoxAutoEncoder"
     }
   },
   "n_epochs": 100,

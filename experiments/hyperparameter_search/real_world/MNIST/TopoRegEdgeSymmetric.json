@@ -22,7 +22,7 @@
     "evaluation__evaluate_on": "validation",
     "evaluation__k": 20,
     "model__name": "TopologicallyRegularizedAutoencoder",
-    "model__parameters__autoencoder_model": "ELUUMAPAutoEncoder",
+    "model__parameters__autoencoder_model": "BoxAutoEncoder",
     "model__parameters__toposig_kwargs__match_edges": "symmetric",
     "n_epochs": 50,
     "learning_rate": 0.001,

@@ -27,7 +27,7 @@
     "evaluation__evaluate_on": "validation",
     "evaluation__k": 20,
     "model__name": "VanillaAutoencoderModel",
-    "model__parameters__autoencoder_model": "ELUUMAPAutoEncoder",
+    "model__parameters__autoencoder_model": "BoxAutoEncoder",
     "n_epochs": 100,
     "quiet": true
   },

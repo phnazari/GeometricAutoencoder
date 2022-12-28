@@ -1,15 +1,14 @@
 """All models."""
-from .approx_based import TopologicallyRegularizedAutoencoder, GeometricAutoencoder
-from .vanilla import ConvolutionalAutoencoderModel, VanillaAutoencoderModel
+from .regularized import TopologicallyRegularizedAutoencoder, GeometricAutoencoder
+from .vanilla import VanillaAutoencoderModel
 from .competitors import Isomap, PCA, TSNE, UMAP, ParametricUMAP
 
 __all__ = [
-    'ConvolutionalAutoencoderModel',
     'TopologicallyRegularizedAutoencoder',
     'TopologicalSurrogateAutoencoder',
     'GeometricAutoencoder',
     'VanillaAutoencoderModel',
-    'ELUUMAPAutoEncoder',
+    'BoxAutoEncoder',
     'Isomap',
     'PCA',
     'TSNE',

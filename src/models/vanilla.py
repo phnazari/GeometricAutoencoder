@@ -6,23 +6,6 @@ from src.models import submodules
 from .base import AutoencoderModel
 
 
-class ConvolutionalAutoencoderModel(submodules.ConvolutionalAutoencoder):
-    """Convolutional autoencoder model.
-
-    Same as the submodule but returns MSE loss.
-    """
-
-    def __init__(self):
-        """Convolutional Autoencoder."""
-        super().__init__()
-        self.reconst_error = nn.MSELoss()
-
-    def forward(self, x):
-        """Return MSE reconstruction loss of convolutional autoencoder."""
-        _, reconst = super().forward(x)
-        return self.reconst_error(x, reconst), tuple()
-
-
 class VanillaAutoencoderModel(AutoencoderModel):
     def __init__(self, autoencoder_model='ConvolutionalAutoencoder',
                  ae_kwargs=None):

@@ -1,16 +1,14 @@
 import os
 from datetime import datetime
 from pathlib import Path
-from decimal import Decimal
 
-import conf
 import numpy as np
 import torch
 
 from diagnostics.metric_properties import plot_determinants, plot_indicatrices
 from diagnostics.representations import plot_latent_space, plot_dataset
 
-from src.models.submodules import ELUUMAPAutoEncoder
+from src.models.submodules import BoxAutoEncoder
 
 from data.handle_data import load_data, data_forward
 from firelight.visualizers.colorization import get_distinct_colors
@@ -21,18 +19,6 @@ from numpy import genfromtxt
 os.environ["GEOMSTATS_BACKEND"] = "pytorch"
 
 """ modify """
-
-
-# currently used auto encoder
-# AE = DeepThinAutoEncoder
-# AE = ELUAutoEncoder
-# AE = TestELUAutoEncoder
-# AE = ThinAutoEncoder
-# AE = WideShallowAutoEncoder
-# AE = WideDeepAutoEncoder
-# AE = TopoAutoEncoder
-# AE = UMAPAutoEncoder
-
 
 def evaluate(writer_dir=None,
              model_path=None,
@@ -50,7 +36,7 @@ def evaluate(writer_dir=None,
         dataset = "Earth"
 
     # choose Autoencoder model
-    AE = ELUUMAPAutoEncoder
+    AE = BoxAutoEncoder
 
     train_batch_size = 256
 

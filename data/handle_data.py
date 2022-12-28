@@ -86,7 +86,7 @@ def data_forward(model, test_loader):
             else:
                 labels = torch.vstack((labels, batch_labels))
 
-    # if model.__class__.__name__ in ["DeepAE", "ELUUMAPAutoEncoder"]:  # and False:
+    # if model.__class__.__name__ in ["DeepAE", "BoxAutoEncoder"]:  # and False:
     outputs = outputs.view(-1, model.input_dim)
 
     return inputs, outputs, latent_activations, labels

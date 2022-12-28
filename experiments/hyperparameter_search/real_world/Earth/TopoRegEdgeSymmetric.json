@@ -25,7 +25,7 @@
     "model__parameters__ae_kwargs__input_dims": [
       3
     ],
-    "model__parameters__autoencoder_model": "ELUUMAPAutoEncoder",
+    "model__parameters__autoencoder_model": "BoxAutoEncoder",
     "model__parameters__toposig_kwargs__match_edges": "symmetric",
     "n_epochs": 50,
     "learning_rate": 0.001,

@@ -13,7 +13,7 @@ import torch
 from matplotlib import pyplot as plt
 import dateutil.parser
 from util import get_saving_kwargs
-from src.models.submodules import ELUUMAPAutoEncoder
+from src.models.submodules import BoxAutoEncoder
 import matplotlib as mpl
 
 encoder_name = "sqrt"
@@ -52,8 +52,8 @@ def convert():
 
         embedder = load_ParametricUMAP(os.path.join(path, "model"))
 
-        # model = ELUUMAPAutoEncoder(input_shape=dimension, latent_dim=2)
-        model = ELUUMAPAutoEncoder(input_dims=input_dims, input_shape=dimension, latent_dim=2)
+        # model = BoxAutoEncoder(input_shape=dimension, latent_dim=2)
+        model = BoxAutoEncoder(input_dims=input_dims, input_shape=dimension, latent_dim=2)
 
         model.encoder[1].weight = torch.nn.Parameter(torch.from_numpy(embedder.encoder.layers[2].weights[0].numpy()).T)
         model.encoder[3].weight = torch.nn.Parameter(torch.from_numpy(embedder.encoder.layers[3].weights[0].numpy()).T)
