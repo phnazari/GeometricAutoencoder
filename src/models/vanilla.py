@@ -1,6 +1,5 @@
 """Vanilla models."""
-import torch.nn as nn
-from criterions import DeterminantLoss
+from src.criterions import DeterminantLoss
 
 from src.models import submodules
 from .base import AutoencoderModel

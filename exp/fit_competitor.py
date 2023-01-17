@@ -93,6 +93,8 @@ def train(val_size, evaluation, _run, _log, _seed, _rnd):
     train_labels = np.array(labels)
 
     _log.info('Fitting model...')
+    print(model.autoencoder_loss, model.parametric_reconstruction, model.parametric_reconstruction_loss_fcn, model.min_dist, model.n_components,
+          model.n_neighbors, model.parametric_reconstruction_loss_weight, model.n_training_epochs)
     transformed_data = model.fit_transform(data)
 
     rundir = None
@@ -181,7 +183,6 @@ def train(val_size, evaluation, _run, _log, _seed, _rnd):
             df = pd.DataFrame(train_latent)
             df['labels'] = train_labels
             df.to_csv(os.path.join(rundir, 'train_latents.csv'), index=False)
-
 
         if latent.shape[1] == 2 and rundir:
             # Visualize latent space

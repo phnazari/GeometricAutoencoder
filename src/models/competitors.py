@@ -1,4 +1,5 @@
 """Competitor dimensionality reduction algorithms."""
+from keras.regularizers import l2
 from sklearn.decomposition import PCA
 from sklearn.manifold import Isomap
 from umap import UMAP
@@ -38,14 +39,12 @@ class ParametricUMAP(ParametricUMAP_vanilla):
         self.latent_dim = latent_dim
         self.input_dim = input_dim
 
-        # input_dim = 784
-
         self.encoder = tf.keras.Sequential(
             [
                 tf.keras.layers.InputLayer(input_shape=input_dim),
                 tf.keras.layers.Activation("elu"),
                 tf.keras.layers.Flatten(),
-                tf.keras.layers.Dense(units=100, activation="elu"),
+                tf.keras.layers.Dense(units=100, activation="elu"),  # , kernel_regularizer=l2(1e-5)),
                 tf.keras.layers.Dense(units=100, activation="elu"),
                 tf.keras.layers.Dense(units=100, activation="elu"),
                 tf.keras.layers.Dense(units=100, activation="elu"),
@@ -70,10 +69,11 @@ class ParametricUMAP(ParametricUMAP_vanilla):
 
         super().__init__(encoder=self.encoder,
                          decoder=self.decoder,
+                         autoencoder_loss=autoencoder_loss,
+                         parametric_reconstruction=parametric_reconstruction,
                          parametric_reconstruction_loss_fcn=parametric_reconstruction_loss_fcn,
                          min_dist=min_dist,
                          n_components=n_components,
                          n_neighbors=n_neighbors,
-                         autoencoder_loss=autoencoder_loss,
-                         parametric_reconstruction=parametric_reconstruction
+                         batch_size=125
                          )

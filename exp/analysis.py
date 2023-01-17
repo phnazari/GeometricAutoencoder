@@ -12,23 +12,24 @@ datasets = [
     # "Earth",
     # "FashionMNIST",
     # "CElegans",
-    "Zilionis_normalized",
-    # "PBMC"
+    # "Zilionis_normalized",
+    # "PBMC",
+    "PBMC_new"
 ]
 
 models = [
     # "Vanilla",
     # "TopoReg",
-    "GeomReg",
+    # "GeomReg",
     # "PCA",
-    # "TSNE",
-    # "UMAP",
+    "TSNE",
+    "UMAP",
     # "ParametricUMAP"
 ]
 
 diagnostics = [
-    # "indicatrices",
-    # "determinants",
+    "indicatrices",
+    "determinants",
     "embedding"
 ]
 
@@ -43,6 +44,8 @@ for dataset in datasets:
 
         model_paths.append(os.path.join(base, dir, "evaluation/repetitions/rep1", dataset, model, "model_state.pth"))
 
+model_paths = [os.path.join("/export/home/pnazari/workspace/AutoEncoderVisualization/save_config/MNIST/ParametricUMAP", "model_state.pth")]
+
 for i, model_path in enumerate(model_paths):
     img_path = model_path.split("/")[-2]
     dataset = model_path.split("/")[-3]
@@ -51,7 +54,6 @@ for i, model_path in enumerate(model_paths):
     evaluate(writer_dir="test",
              model_path=model_path,
              img_path=img_path,
+             dataset_name=dataset,
              model_name=model_name,
-             dataset=dataset,
-             used_diagnostics=diagnostics
-             )
+             used_diagnostics=diagnostics)

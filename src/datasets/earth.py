@@ -1,13 +1,6 @@
 """Datasets."""
 import os
 
-import numpy as np
-
-import torch
-from torch.utils.data import Dataset
-from torchvision import datasets
-from torchvision import transforms
-
 from data import custom
 
 

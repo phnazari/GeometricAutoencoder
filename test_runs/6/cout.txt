@@ -1,0 +1,4 @@
+INFO: Running command 'train'
+INFO: Started run with ID "6"
+INFO: Result: {'training.loss': 0.04574698190470891, 'training.loss.autoencoder': 0.03711517987373684, 'training.loss.topo_error': 0.017263603943865745, 'training.metrics.matched_pairs_0D': 38.81071428571428, 'training.metrics.distance1-2': 0.8008372990148408, 'training.metrics.distance2-1': 1.357113086751529, 'training.reconstruction_error': 0.03711517987373684}
+INFO: Completed after 1:22:18

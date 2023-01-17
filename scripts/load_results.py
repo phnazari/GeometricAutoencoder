@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 import math
 import pandas as pd
 import numpy as np
@@ -41,6 +42,7 @@ def aggregate_metrics(df, larger_is_better):
 
     for col in df.columns:
         # as pm formatting occured before, extract means:
+        print(df[col])
         means = df[col].str.split(' ', n=1, expand=True)
         means[0] = means[0].astype(float)
 
@@ -80,19 +82,25 @@ def nested_dict():
 
 
 # CAVE: set the following paths accordingly!
-outpath = '../tex_Geom'
-path_comp = '../experiments/train_model/evaluation/repetitions'
-path_ae = '../experiments/fit_competitor/evaluation/repetitions'
+outpath = 'tex_Geom'
+path_comp = 'experiments/train_model/evaluation/repetitions'
+path_ae = 'experiments/fit_competitor/evaluation/repetitions'
 
 Path(outpath).mkdir(exist_ok=True)
 
-# filelist= [path]
-files_comp = glob.glob(path_comp + '/**/run.json', recursive=True)
+# files_ae = glob.glob(os.path.join(os.path.dirname(__file__), "..", path_ae, "/**/run.json"), recursive=True)
 files_ae = glob.glob(path_ae + '/**/run.json', recursive=True)
+# files_comp = glob.glob(os.path.join(os.path.dirname(__file__), "..", path_comp, "/**/run.json"), recursive=True)
+files_comp = glob.glob(path_comp + '/**/run.json', recursive=True)
 filelist = files_ae + files_comp
 
+# use non aggregated, i.e. with MSE
 used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_trustworthiness',
                  'spearman_metric', '_mse', 'reconstruction']
+
+# use for aggregated, i.e. without MSE
+# used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_trustworthiness',
+#                'spearman_metric']
 
 # mean_neighbourhood_loss, mean_continuity, mean_rank_correlation, mean_mrre, stress, density_global
 
@@ -108,7 +116,7 @@ repetitions = np.arange(1, 6)
 all_used_keys = []
 
 ignored_models = ["ParametricUMAP_old"]
-ignored_datasets = ["Zilionis", "FashionMNIST_old", "Earth", "MNIST_optimized", "Images"]
+ignored_datasets = ["Zilionis", "FashionMNIST_old", "Earth", "MNIST_optimized", "Images", "PBMC"]
 
 for filename in filelist:
     split = filename.split('/')
@@ -220,12 +228,11 @@ for dataset in datasets:
                     else:
                         experiment_stats[dataset][model][key] = float("nan")
 
-
-                    #if 'test_density_kl_global_100' in key:
+                    # if 'test_density_kl_global_100' in key:
                     #    experiment_stats[dataset][model][key] = round_significant([mean], [std])[
                     #        0]  # = f'{mean:1.12f}' + ' $\pm$ ' + f'{std:1.12f}'
                     #    # experiment_stats[dataset][model][key] = f'{mean:1.10f}'
-                    #else:
+                    # else:
                     #    experiment_stats[dataset][model][key] = round_significant([mean], [std])[
                     #        0]  # f'{mean:1.5f}' + ' $\pm$ ' + f'{std:1.5f}'
                     #    # experiment_stats[dataset][model][key] = f'{mean:1.5f}'
@@ -255,10 +262,11 @@ col_mapping = {'test_density_kl_global_0001': '$\dkl_{0.001}$',
                'test_spearman_metric': 'Spear',
                }
 
+# use for non aggregated, i.e. with MSE
 order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear', 'MSE']
-order_measures_ranks = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$',
-                        'Spear', '$\\langle \\text{rank*} \rangle$', 'MSE',
-                        '$\\langle \\text{rank} \rangle$']
+# use for aggregated, i.e. without MSE
+# order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear']
+
 
 larger_is_better = {
     '$\dkl_{0.001}$': 0,
@@ -298,11 +306,8 @@ for dataset in datasets:
     df = pd.DataFrame.from_dict(experiment_stats[dataset], orient='index')
     df = df.rename(columns=col_mapping)
 
-    if dataset == 'Spheres':
-        df['order'] = [4, 5, 6, 3, 1, 2, 0]
-    else:
-        # df['order'] = [7, 6, 5, 2, 3, 1]
-        df['order'] = [7, 6, 5, 4, 2, 3, 1]
+    # df['order'] = [7, 6, 5, 2, 3, 1]
+    df['order'] = [7, 6, 5, 4, 2, 3, 1]
 
     # columns = np.delete(columns, np.where(columns == "order"))
 

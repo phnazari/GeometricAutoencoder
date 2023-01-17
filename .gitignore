@@ -4,6 +4,8 @@ tests/output
 data/raw
 *_sources*
 
+exp/output
+
 DS_Store
 _.DS_Store
 Pipfile.lock

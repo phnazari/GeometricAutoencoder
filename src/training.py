@@ -103,6 +103,7 @@ class TrainingLoop():
                 if self.device == 'cuda':
                     img = img.cuda(non_blocking=True)
 
+                # TODO redo
                 self.on_batch_begin(remove_self(locals()))
 
                 # Set model into training mode and compute loss
@@ -117,68 +118,13 @@ class TrainingLoop():
                 if self.with_geom_loss:
                     geom_error += loss_components["loss.geom_error"]
 
-                # if data is None:
-                #    data = img
-                #    latents = model.autoencoder.latent_activations.detach().clone()
-                # else:
-                #    data = torch.cat((data, img))
-                #    latents = torch.cat((latents, model.autoencoder.latent_activations.detach().clone()))
-
                 # Call callbacks
+                # TODO redo
                 self.on_batch_end(remove_self(locals()))
 
+            # TODO redo
             if self.on_epoch_end(remove_self(locals())):
                 break
-
-            """
-            else:
-                # TODO: this could create problems, no? The detaching. Or is it not inplace?!
-                # TODO: do I really need to create a deepcopy here? PROBABLY NOT! But what about
-
-                # TODO: move to epoch end callback
-
-                if self.evaluation and "metrics" in self.evaluation:
-                    k_min, k_max, k_step = \
-                        self.evaluation['k_min'], self.evaluation['k_max'], self.evaluation['k_step']
-                    ks = list(range(k_min, k_max + k_step, k_step))
-
-                    print("BEGIN")
-                    evaluator = Multi_Evaluation(
-                        dataloader=train_loader, seed=self._seed, model=model)
-
-                    # labels = dataset.targets
-                    # data = dataset.data.to(self.device)
-                    # print(data.shape)
-                    # print("\nhere\n")
-                    # model.autoencoder(dataset)
-                    # print("\nendhere\n")
-
-                    # latents = model.latent_activations.to(self.device)
-                    data = data.view(latents.shape[0], -1)
-
-                    nth = 500
-
-                    # reduce size of dataset
-                    data = data[nth::]
-                    latents = latents[nth::]
-
-                    # TODO: remove cpu(), do everything on GPU. So implement the metrics in torch
-                    epoch_measures = evaluator.calc_metrics(self.evaluation["metrics"], data, latents, ks)
-
-                    for key in self.evaluation["metrics"]:
-                        metrics[key].append(epoch_measures[key])
-                        stds[key].append(0)
-
-                    print(epoch_measures)
-                    print(metrics)
-
-        plot_losses(
-            metrics,
-            stds,
-            save_file=os.path.join(self.rundir, 'metrics_training.png')
-        )
-
-        """
 
         return epoch
 

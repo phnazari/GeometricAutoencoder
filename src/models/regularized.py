@@ -2,7 +2,7 @@
 import numpy as np
 import torch
 import torch.nn as nn
-from criterions import DeterminantLoss
+from src.criterions import DeterminantLoss
 
 from src.topology import PersistentHomologyCalculation  # AlephPersistenHomologyCalculation, \
 from src.models import submodules
@@ -120,8 +120,8 @@ class GeometricAutoencoder(AutoencoderModel):
         super().__init__()
         self.lam = lam
         ae_kwargs = ae_kwargs if ae_kwargs else {}
-        toposig_kwargs = toposig_kwargs if toposig_kwargs else {}
-        self.topo_sig = TopologicalSignatureDistance(**toposig_kwargs)
+        # toposig_kwargs = toposig_kwargs if toposig_kwargs else {}
+        # self.topo_sig = TopologicalSignatureDistance(**toposig_kwargs)
         self.autoencoder = getattr(submodules, autoencoder_model)(**ae_kwargs)
         self.latent_norm = torch.nn.Parameter(data=torch.ones(1),
                                               requires_grad=True)

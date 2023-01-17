@@ -2,9 +2,10 @@ import os
 from datetime import timedelta
 
 import numpy as np
-from matplotlib.cm import ScalarMappable
-from mpl_toolkits.axes_grid1 import make_axes_locatable
-from umap.parametric_umap import load_ParametricUMAP
+from src.datasets.pbmc_new import PBMC_new
+from data.handle_data import load_data
+from src.models import GeometricAutoencoder
+from umap.parametric_umap import load_ParametricUMAP, ParametricUMAP
 import json
 
 os.environ["GEOMSTATS_BACKEND"] = "pytorch"
@@ -12,13 +13,9 @@ os.environ["GEOMSTATS_BACKEND"] = "pytorch"
 import torch
 from matplotlib import pyplot as plt
 import dateutil.parser
-from util import get_saving_kwargs
+from util import get_saving_kwargs, get_sc_kwargs
 from src.models.submodules import BoxAutoEncoder
 import matplotlib as mpl
-
-encoder_name = "sqrt"
-
-input_dim = 784
 
 
 def convert():
@@ -29,6 +26,8 @@ def convert():
 
         if len(subdir.split("/")) == 15 and subdir.split("/")[-1] == "ParametricUMAP":
             paths.append(subdir)
+
+    paths = ["/export/home/pnazari/workspace/AutoEncoderVisualization/save_config/2"]
 
     for i, path in enumerate(paths):
         print(f"{i} of {len(paths)}")
@@ -44,11 +43,20 @@ def convert():
         elif model == "PBMC":
             dimension = 50
             input_dims = (1, 50)
+        elif model == "PBMC_new":
+            dimension = 50
+            input_dims = (1, 50)
         elif model == "CElegans":
             dimension = 100
             input_dims = (1, 100)
         elif model == "Earth":
             continue
+        else:
+            dimension = 784
+            input_dims = (1, 28, 28)
+
+        # if model != "PBMC_new":
+        #    continue
 
         embedder = load_ParametricUMAP(os.path.join(path, "model"))
 
@@ -77,7 +85,7 @@ def convert():
         model.decoder[7].bias = torch.nn.Parameter(torch.from_numpy(embedder.decoder.layers[4].bias.numpy()))
         model.decoder[9].bias = torch.nn.Parameter(torch.from_numpy(embedder.decoder.layers[5].bias.numpy()))
 
-        torch.save(model.state_dict(), os.path.join(path, "model_state_new.pth"))
+        torch.save(model.state_dict(), os.path.join(path, "model_state.pth"))
 
 
 def plot_loss_curves():
@@ -113,9 +121,13 @@ def plot_loss_curves():
         geom_loss = torch.load(path)
         losses[model].append(geom_loss)
 
-    fig, ax = plt.subplots(figsize=(6, 6))
-    ax.set_xlabel("epoch")
-    ax.set_ylabel("Geometric Loss")
+    fig, ax = plt.subplots(figsize=(10, 5))
+    plt.rcParams.update({'font.size': 15})
+    ax.set_xlabel("epoch", fontsize=15)
+    ax.set_ylabel("Geometric Loss", fontsize=15)
+    ax.tick_params(axis='both', which='major', labelsize=15)
+
+    plt.rcParams["font.family"] = "Times New Roman"
 
     for model, loss in losses.items():
         if loss:
@@ -128,7 +140,26 @@ def plot_loss_curves():
             ax.fill_between(x, mean_loss - std_loss, mean_loss + std_loss, alpha=0.5, color=key_to_color[model])
             ax.set_yscale("log")
 
+    mean_pumap_loss, std_pumap_loss = calc_pumap_geom_loss()
+    # mean_pumap_loss, std_pumap_loss = [100], [2]
+
+    ax.errorbar(150, mean_pumap_loss, yerr=std_pumap_loss, label="UMAP", color="darkgoldenrod", capsize=10,
+                elinewidth=2, ms=10, marker=".")
+
+    x_int = [0, 20, 40, 60, 80, 100, 150]
+    x_str = [0, 20, 40, 60, 80, 100, "UMAP AE"]
+
+    ax.set_xticks(x_int)
+    ax.set_xticklabels(x_str)
+
+    chartBox = ax.get_position()
+    # ax.set_position([0, 0, chartBox.width, chartBox.height])
+
+    # ax.legend(loc="center left", bbox_to_anchor=(1, 0.5), fontsize=22, markerscale=2)
+
     plt.legend(loc="best")
+
+    ax.spines[['right', 'top']].set_visible(False)
 
     output_path = "exp/output/graphics/MNIST/Loss/geometric_loss.png"
     plt.savefig(output_path, **get_saving_kwargs())
@@ -141,12 +172,12 @@ def calculate_runtime():
 
     for subdir, dirs, _ in os.walk(
             os.path.join(os.path.dirname(__file__), '..', "experiments/train_model/speed/repetitions/")):
-        if len(subdir.split("/")) == 15:
+        if len(subdir.split("/")) == 15 and subdir.split("/")[-1] != "train_model":
             paths.append(os.path.join(subdir, "run.json"))
 
     for subdir, dirs, _ in os.walk(
             os.path.join(os.path.dirname(__file__), '..', "experiments/fit_competitor/speed/repetitions/")):
-        if len(subdir.split("/")) == 15:
+        if len(subdir.split("/")) == 15 and subdir.split("/")[-1] != "fit_competitor":
             paths.append(os.path.join(subdir, "run.json"))
 
     times = {
@@ -161,6 +192,7 @@ def calculate_runtime():
 
     for path in paths:
         model = path.split("/")[-2]
+        dataset = path.split("/")[-3]
 
         with open(path, "r") as file:
             data = json.loads(file.read())
@@ -172,6 +204,9 @@ def calculate_runtime():
             end_time = dateutil.parser.parse(end_time_str)
 
             time_delta = end_time - start_time
+
+            if model == "UMAP":
+                print(dataset, time_delta, end_time, start_time)
 
             if time_delta.days == -1:
                 time_delta += timedelta(days=1)
@@ -188,11 +223,87 @@ def calculate_runtime():
         print(model, mean_minutes, std_minutes)
 
 
+def calc_pumap_geom_loss():
+    paths = []
+
+    for subdir, dirs, _ in os.walk(
+            os.path.join(os.path.dirname(__file__), '..', 'experiments/fit_competitor/evaluation/repetitions/')):
+
+        if len(subdir.split("/")) == 15 and subdir.split("/")[-1] == "ParametricUMAP" and subdir.split("/")[
+            -2] == "MNIST":
+            paths.append(os.path.join(subdir, "model_state.pth"))
+
+    train_loader, _ = load_data(train_batch_size=125,
+                                test_batch_size=256,
+                                dataset="MNIST")
+
+    geom_errors = []
+
+    for i, path in enumerate(paths):
+        print(path)
+        model = GeometricAutoencoder(lam=0.1, autoencoder_model="BoxAutoEncoder")
+        model.autoencoder.load(path)
+
+        geom_error = 0
+
+        for batch, (img, label) in enumerate(train_loader):
+            model.train()
+            loss, loss_components = model(img)
+            geom_error += loss_components["loss.geom_error"]
+
+        geom_errors.append(geom_error)
+
+    geom_errors = torch.tensor(geom_errors)
+
+    mean_geom_error = torch.mean(geom_errors)
+    std_geom_error = torch.std(geom_errors)
+
+    return mean_geom_error, std_geom_error
+
+
 def create_colorbar():
     root_path = os.path.join(os.path.dirname(__file__), 'output/graphics/cbar')
-    sizes = [10, 15, 20, 25]
+    sizes = [10, 15, 20, 25, 35]
+    # sizes = [10]
 
     for size in sizes:
+        # Vertical
+        path = os.path.join(root_path, f'cbar_vertical_{size}.png')
+
+        # Make a figure and axes with dimensions as desired.
+        # fig = plt.figure(figsize=(8, 1.5))
+        fig = plt.figure(figsize=(2., 8))
+        # ax1 = fig.add_axes([0.05, 0.75, 0.9, 0.15])
+        ax1 = fig.add_axes([0.05, 0.05, 0.15, 0.9])
+
+        cmap_old = plt.get_cmap("turbo")
+
+        minval = 0.4  # 0.2
+        maxval = 0.8  # 0.6
+        n = 100
+        cmap = mpl.colors.LinearSegmentedColormap.from_list(
+            'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap_old.name, a=minval, b=maxval),
+            cmap_old(np.linspace(minval, maxval, n)))
+
+        norm = mpl.colors.Normalize(vmin=-1.8, vmax=1.22)
+
+        cb1 = mpl.colorbar.ColorbarBase(ax1,
+                                        cmap=cmap,
+                                        norm=norm,
+                                        orientation='vertical',
+                                        )
+
+        cb1.ax.set_yticks([-1.0, 0., 1.1])
+
+        cb1.ax.set_yticklabels(["contract", "neutral", "expand"], rotation=90)
+        cb1.ax.tick_params(labelsize=size)
+        # cb1.set_label('Scaled Generalized Jacobian Determinant', size=size)
+
+        plt.savefig(path, **get_saving_kwargs())
+
+        plt.show()
+
+        # Horizontal
         path = os.path.join(root_path, f'cbar_horizontal_{size}.png')
 
         # Make a figure and axes with dimensions as desired.
@@ -205,33 +316,53 @@ def create_colorbar():
         cb1 = mpl.colorbar.ColorbarBase(ax1,
                                         cmap=cmap,
                                         norm=norm,
-                                        orientation='horizontal')
+                                        orientation='horizontal',
+                                        )
 
+        cb1.ax.set_xticks([-1., 0., 1.])
+        cb1.ax.set_xticklabels(["-1\n(contract)", "0\n(neutral)", " 1\n(expand)"])
         cb1.ax.tick_params(labelsize=size)
-        cb1.set_label('Scaled Generalized Jacobian Determinant', size=size)
 
         plt.savefig(path, **get_saving_kwargs())
 
         plt.show()
 
-    # Make a figure and axes with dimensions as desired.
-    # fig = plt.figure(figsize=(1.5, 8))
-    # ax1 = fig.add_axes([0.20, 0.05, 0.10, 0.9])
+        # Horizontal Cropped
+        path = os.path.join(root_path, f'cbar_horizontal_cropped_{size}.png')
 
-    # cmap = "turbo"
-    # norm = mpl.colors.Normalize(vmin=-1.8, vmax=1.22)
+        # Make a figure and axes with dimensions as desired.
+        fig = plt.figure(figsize=(8, 1.5))
+        ax1 = fig.add_axes([0.05, 0.75, 0.9, 0.15])
 
-    # cb1 = mpl.colorbar.ColorbarBase(ax1,
-    #                                cmap=cmap,
-    #                                norm=norm,
-    #                                orientation='vertical')
+        cmap_old = plt.get_cmap("turbo")
 
-    # cb1.ax.tick_params(labelsize=20)
-    # cb1.set_label('Scaled Generalized Jacobian Determinant')
+        minval = 0.3  # 0.2
+        maxval = 0.8  # 0.6
+        n = 100
+        cmap = mpl.colors.LinearSegmentedColormap.from_list(
+            'trunc({n},{a:.2f},{b:.2f})'.format(n=cmap_old.name, a=minval, b=maxval),
+            cmap_old(np.linspace(minval, maxval, n)))
 
-    # plt.savefig(path2, **get_saving_kwargs())
+        norm = mpl.colors.Normalize(vmin=-1.8, vmax=1.22)
 
-    # plt.show()
+        cb1 = mpl.colorbar.ColorbarBase(ax1,
+                                        cmap=cmap,
+                                        norm=norm,
+                                        orientation='horizontal',
+                                        )
+
+        cb1.ax.set_xticks([-1.3, 0., 0.8])
+        cb1.ax.set_xticklabels(["contract", "neutral", " expand"])
+        cb1.ax.tick_params(labelsize=size)
+
+        plt.savefig(path, **get_saving_kwargs())
+
+        plt.show()
 
 
-create_colorbar()
+def test_dataset():
+    dataset = PBMC_new(train=True, )
+    print(dataset.labels)
+
+
+convert()

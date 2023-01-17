@@ -1,0 +1,4 @@
+INFO: Running command 'train'
+INFO: Started run with ID "2"
+INFO: Result: {'training.loss': 0.03534327789342829, 'training.reconstruction_error': 0.03534327789342829}
+INFO: Completed after 0:25:08

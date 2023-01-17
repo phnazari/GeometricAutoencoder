@@ -3,14 +3,13 @@ import torch
 import torchvision
 
 from conf import device
-# from data.custom import SwissRoll, Spheres, Chiocciola, Saddle, HyperbolicParabloid, Earth, FigureEight, Zilionis, PBMC, \
-#    CElegans, Images
 
 from src.datasets.mnist import MNIST
 from src.datasets.fashion_mnist import FashionMNIST
 from src.datasets.celegans import CElegans
 from src.datasets.zilionis import Zilionis
 from src.datasets.pbmc import PBMC
+from src.datasets.pbmc_new import PBMC_new
 from src.datasets.earth import Earth
 
 
@@ -29,6 +28,9 @@ def load_data(train_batch_size=128, test_batch_size=32, dataset="MNIST"):
     elif dataset == "PBMC":
         train_dataset = PBMC(train=True)
         test_dataset = PBMC(train=False)
+    elif dataset == "PBMC_new":
+        train_dataset = PBMC_new(train=True)
+        test_dataset = PBMC_new(train=False)
     elif dataset == "CElegans":
         train_dataset = CElegans(train=True)
         test_dataset = CElegans(train=False)

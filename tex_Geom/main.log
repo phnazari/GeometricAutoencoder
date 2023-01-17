@@ -1,8 +1,8 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.12)  22 DEC 2022 15:56
+This is pdfTeX, Version 3.141592653-2.6-1.40.24 (TeX Live 2022) (preloaded format=pdflatex 2022.10.12)  14 JAN 2023 15:00
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
-**main
+**main.tex
 (./main.tex
 LaTeX2e <2022-06-01> patch level 5
 L3 programming layer <2022-09-28>
@@ -270,31 +270,26 @@ pdf-sys.cfg
 File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Liv
 e
 )) (./MNIST_table_5_digits.tex) (./FashionMNIST_table_5_digits.tex)
-(./PBMC_table_5_digits.tex) (./CElegans_table_5_digits.tex)
-(./Zilionis_normalized_table_5_digits.tex)
-Overfull \hbox (8.18962pt too wide) in paragraph at lines 27--37
- [] 
- []
-
-[1{/export/home/pnazari/local/texlive/2022/texmf-var/fonts/map/pdftex/updmap/pd
-ftex.map}] (./main.aux) ) 
+(./PBMC_new_table_5_digits.tex) (./CElegans_table_5_digits.tex)
+(./Zilionis_normalized_table_5_digits.tex) [1{/export/home/pnazari/local/texliv
+e/2022/texmf-var/fonts/map/pdftex/updmap/pdftex.map}] (./main.aux) ) 
 Here is how much of TeX's memory you used:
  2803 strings out of 475071
- 45072 string characters out of 5770931
+ 45092 string characters out of 5770931
  429107 words of memory out of 5000000
  24200 multiletter control sequences out of 15000+600000
  470021 words of font info for 31 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 55i,14n,62p,415b,372s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</export/home/pnazari/local/texlive/2022/texmf-dist/fo
-nts/type1/public/amsfonts/cm/cmbx10.pfb></export/home/pnazari/local/texlive/202
-2/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></export/home/pnazari/lo
-cal/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></export/h
-ome/pnazari/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.
+ 55i,14n,62p,419b,372s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</export/ho
+me/pnazari/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.
 pfb></export/home/pnazari/local/texlive/2022/texmf-dist/fonts/type1/public/amsf
-onts/cm/cmr7.pfb></export/home/pnazari/local/texlive/2022/texmf-dist/fonts/type
-1/public/amsfonts/cm/cmsy10.pfb>
-Output written on main.pdf (1 page, 71507 bytes).
+onts/cm/cmmi10.pfb></export/home/pnazari/local/texlive/2022/texmf-dist/fonts/ty
+pe1/public/amsfonts/cm/cmmi7.pfb></export/home/pnazari/local/texlive/2022/texmf
+-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></export/home/pnazari/local/texl
+ive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></export/home/pnaza
+ri/local/texlive/2022/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb>
+Output written on main.pdf (1 page, 71466 bytes).
 PDF statistics:
  38 PDF objects out of 1000 (max. 8388607)
  22 compressed objects within 1 object stream

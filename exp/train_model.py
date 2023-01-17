@@ -127,6 +127,10 @@ def train(n_epochs, batch_size, learning_rate, weight_decay, val_size,
                        device=device),
     ]
 
+    # TODO redo
+    # callbacks = []
+
+    # TODO redo
     if quiet:
         # Add newlines between epochs
         callbacks.append(NewlineCallback())
@@ -134,16 +138,16 @@ def train(n_epochs, batch_size, learning_rate, weight_decay, val_size,
         callbacks.append(Progressbar(print_loss_components=True))
 
     # If we are logging this run save reconstruction images
-    if rundir is not None:
-        if hasattr(dataset, 'inverse_normalization'):
-            # We have image data so we can visualize reconstructed images
-            # callbacks.append(SaveReconstructedImages(rundir))
-            pass
-        if evaluation['online_visualization']:
-            callbacks.append(
-                SaveLatentRepresentation(
-                    train_dataset, rundir, batch_size=64, device=device)
-            )
+    # if rundir is not None:
+    #    if hasattr(dataset, 'inverse_normalization'):
+    #        # We have image data so we can visualize reconstructed images
+    #        # callbacks.append(SaveReconstructedImages(rundir))
+    #        pass
+    #    if evaluation['online_visualization']:
+    #        callbacks.append(
+    #            SaveLatentRepresentation(
+    #                train_dataset, rundir, batch_size=64, device=device)
+    #        )
 
     training_loop = TrainingLoop(
         model, dataset, n_epochs, batch_size, learning_rate, weight_decay,
@@ -151,9 +155,9 @@ def train(n_epochs, batch_size, learning_rate, weight_decay, val_size,
     )
 
     # Run training
-
     training_loop()
 
+    # TODO redo
     if rundir:
         # Save model state (and entire model)
         print('Loading model checkpoint prior to evaluation...')
@@ -163,31 +167,6 @@ def train(n_epochs, batch_size, learning_rate, weight_decay, val_size,
     model.eval()
 
     logged_averages = callbacks[0].logged_averages
-    logged_stds = callbacks[0].logged_stds
-    loss_averages = {
-        key: value for key, value in logged_averages.items() if 'loss' in key
-    }
-    loss_stds = {
-        key: value for key, value in logged_stds.items() if 'loss' in key
-    }
-    metric_averages = {
-        key: value for key, value in logged_averages.items() if 'metric' in key
-    }
-    metric_stds = {
-        key: value for key, value in logged_stds.items() if 'metric' in key
-    }
-
-    # if rundir:
-    # plot_losses(
-    #    loss_averages,
-    #    loss_stds,
-    #    save_file=os.path.join(rundir, 'loss.png')
-    # )
-    # plot_losses(
-    #    metric_averages,
-    #    metric_stds,
-    #    save_file=os.path.join(rundir, 'metrics.png')
-    # )
 
     result = {
         key: values[-1] for key, values in logged_averages.items()

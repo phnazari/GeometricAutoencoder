@@ -61,23 +61,68 @@ def get_saving_kwargs():
     return kwargs
 
 
-def get_coordinates(latent_activations, grid=None, num_steps=20, coords0=None, model_name=None):
-    if grid == "dataset":
-        coordinates = latent_activations
+def get_coordinates(latent_activations, grid=None, num_steps=20, coords0=None, model_name=None, dataset_name=None):
+    x_min = torch.min(latent_activations[:, 0]).item()
+    x_max = torch.max(latent_activations[:, 0]).item()
+    y_min = torch.min(latent_activations[:, 1]).item()
+    y_max = torch.max(latent_activations[:, 1]).item()
+
+    if model_name is None:
+        factor = 0.3
+    elif model_name == "ParametricUMAP":
+        factor = 0.95
+    elif model_name == "Vanilla":
+        if dataset_name == "PBMC":
+            factor = 0.12078598
+            # factor = 0.5
+            # factor = 0.3
+        elif dataset_name == "Zilionis":
+            factor = 0.05
+        else:
+            factor = 0.3
     else:
+        factor = 0.3
 
-        # create grid
-        x_min = torch.min(latent_activations[:, 0]).item()
-        x_max = torch.max(latent_activations[:, 0]).item()
-        y_min = torch.min(latent_activations[:, 1]).item()
-        y_max = torch.max(latent_activations[:, 1]).item()
-
+    if num_steps != None:
         num_steps_x = num_steps
         num_steps_y = ceil((y_max - y_min) / (x_max - x_min) * num_steps_x)
 
         step_size_x = (x_max - x_min) / (num_steps_x)
         step_size_y = (y_max - y_min) / (num_steps_y)
 
+    if grid == "dataset":
+        coordinates = latent_activations
+    elif grid == "off_data":
+        coordinates = []
+        xs = torch.linspace(x_min, x_max, steps=num_steps_x)
+        ys = torch.linspace(y_min, y_max, steps=num_steps_y)
+        num_xs = len(xs)
+        num_ys = len(ys)
+
+        num_tiles = len(xs) * len(ys)
+        mean_data_per_tile = len(latent_activations) / num_tiles
+
+        for i, x in enumerate(xs):
+            for j, y in enumerate(ys):
+                mask_x = torch.logical_and(latent_activations[:, 0] >= x - step_size_x / 2,
+                                           latent_activations[:, 0] <= x + step_size_x / 2)
+                mask_y = torch.logical_and(latent_activations[:, 1] >= y - step_size_y / 2,
+                                           latent_activations[:, 1] <= y + step_size_y / 2)
+                mask = torch.logical_and(mask_x, mask_y)
+                in_tile = latent_activations[mask].shape[0]
+
+                max_data_per_tile = factor * mean_data_per_tile
+                if (i == 0 or i == num_xs - 1) or (j == 0 or j == num_ys - 1):
+                    if (i == 0 or i == num_xs - 1) and (j == 0 or j == num_ys - 1):
+                        max_data_per_tile = max_data_per_tile / 4
+                    else:
+                        max_data_per_tile = max_data_per_tile / 2
+
+                if in_tile < max_data_per_tile:
+                    coordinates.append(torch.tensor([x, y]))
+
+        coordinates = torch.stack(coordinates)
+    elif grid == "on_data":
         if coords0 is not None:
             x_0 = coords0[0].item()
             y_0 = coords0[1].item()
@@ -102,12 +147,6 @@ def get_coordinates(latent_activations, grid=None, num_steps=20, coords0=None, m
             xs = torch.from_numpy(np.concatenate((x_left, x_right))).float()
             ys = torch.from_numpy(np.concatenate((y_down, y_up))).float()
 
-            # x_test = torch.linspace(x_min, x_max, steps=num_steps_x)
-            # print(x)
-            # print(x_test)
-            # print(x.dtype)
-            # print(x_test.dtype)
-            # y = torch.linspace(y_min, y_max, steps=num_steps_y)
         else:
             xs = torch.linspace(x_min, x_max, steps=num_steps_x)
             ys = torch.linspace(y_min, y_max, steps=num_steps_y)
@@ -127,18 +166,9 @@ def get_coordinates(latent_activations, grid=None, num_steps=20, coords0=None, m
                                            latent_activations[:, 1] <= y + step_size_y / 2)
 
                 mask = torch.logical_and(mask_x, mask_y)
-
                 in_tile = latent_activations[mask].shape[0]
 
-                if model_name is None:
-                    factor = 0.3
-                elif model_name == "ParametricUMAP":
-                    factor = 0.95
-                else:
-                    factor = 0.3
-
                 required_data_per_tile = factor * mean_data_per_tile
-
                 if (i == 0 or i == num_xs - 1) or (j == 0 or j == num_ys - 1):
                     if (i == 0 or i == num_xs - 1) and (j == 0 or j == num_ys - 1):
                         required_data_per_tile = required_data_per_tile / 4
@@ -149,14 +179,36 @@ def get_coordinates(latent_activations, grid=None, num_steps=20, coords0=None, m
                     coordinates.append(torch.tensor([x, y]))
 
         coordinates = torch.stack(coordinates)
+    elif grid == "convex_hull":
+        coordinates = []
+        xs = torch.linspace(x_min, x_max, steps=num_steps_x)
+        ys = torch.linspace(y_min, y_max, steps=num_steps_y)
 
-        if grid == "min_square":
-            pass
-        elif grid == "convex_hull":
-            hull = get_hull(latent_activations)
-            coordinates = coordinates[in_hull(coordinates, hull)]
-        else:
-            coordinates = grid
+        for i, x in enumerate(xs):
+            for j, y in enumerate(ys):
+                coordinates.append(torch.tensor([x, y]))
+
+        coordinates = torch.stack(coordinates)
+    else:
+        coordinates = None
+
+        # if grid == "convex_hull":
+        #    hull = get_hull(latent_activations)
+        #    coordinates = coordinates[in_hull(coordinates, hull)]
+
+        # if grid == "off_data":
+        #    coordinates = []
+        #    xs = torch.linspace(x_min, x_max, steps=10)
+        #    ys = torch.linspace(y_min, y_max, steps=10)
+
+        #    for i, x in enumerate(xs):
+        #        for j, y in enumerate(ys):
+        #            coordinates.append(torch.tensor([x, y]))
+
+        #    coordinates = torch.stack(coordinates)
+
+    hull = get_hull(latent_activations)
+    coordinates = coordinates[in_hull(coordinates, hull)]
 
     return coordinates
 

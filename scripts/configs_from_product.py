@@ -33,7 +33,7 @@ def main():
 
         os.makedirs(os.path.dirname(output_filename), exist_ok=True)
 
-        command = f'bash -c "source ~/.bashrc; source activate tf; python3 -m {args.sacred_experiment} -F save_config with config_filename={output_filename}' + ' ' + ' '.join(
+        command = f'bash -c "source ~/.bashrc; conda activate tf; python3 -m {args.sacred_experiment} -F save_config with config_filename={output_filename}' + ' ' + ' '.join(
             list(possible_parameters)) + '"'
 
         subprocess.call(command,

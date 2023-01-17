@@ -264,10 +264,6 @@ class PBMC(CustomDataset):
             self.dir_path = dir_path
             super().__init__(n_samples=n_samples, *args, **kwargs)
 
-            # mean_dataset = torch.mean(self.dataset, dim=1)
-            # std_dataset = torch.std(self.dataset, dim=1)
-            # self.dataset = (self.dataset - mean_dataset[:, None]) / std_dataset[:, None]
-
     def create(self):
         """
         Generate a figure-8 dataset.
@@ -302,7 +298,7 @@ class PBMC(CustomDataset):
         cell_types = np.squeeze(meta.to_numpy())
 
         string_labels = np.unique(cell_types)
-        string_labels = np.array([cell_type[1:] for cell_type in string_labels])
+        # string_labels = np.array([cell_type[1:] for cell_type in string_labels])
 
         return list(string_labels)
 
@@ -323,16 +319,11 @@ class CElegans(CustomDataset):
 
     # curtesy of https://github.com/hci-unihd/UMAPs-true-loss/blob/master/notebooks/UMAP_lung_cancer.ipynb
     def create(self):
-
         pca100 = pd.read_csv(os.path.join(self.dir_path, "c-elegans_qc_final.txt"), sep='\t', header=None)
         meta = pd.read_csv(os.path.join(self.dir_path, "c-elegans_qc_final_metadata.txt"), sep=",", header=0)
 
         # remove instances where celltype is unknown
         meta["cell.type"] = meta["cell.type"].fillna("unknown")
-        # print(meta["cell.type"][meta["cell.type"].isna()])
-        # print(pca100[meta["cell.type"].isna()])
-        # pca100 = pca100[meta["cell.type"].notna()]
-        # meta = meta[meta["cell.type"].notna()]
 
         pca100 = torch.tensor(pca100.to_numpy())
         cell_types = meta["cell.type"].to_numpy()
@@ -342,11 +333,6 @@ class CElegans(CustomDataset):
             labels[cell_types == phase] = i
 
         labels = torch.tensor(labels)
-
-        # get only n samples
-        # idx = torch.randperm(labels.shape[0])[:self.n_samples]
-        # pca100 = pca100[idx]
-        # labels = labels[idx]
 
         pca100 = pca100.float()
         labels = labels.float()
@@ -361,15 +347,63 @@ class CElegans(CustomDataset):
         meta["cell.type"] = meta["cell.type"].fillna("unknown")
         cell_types = meta["cell.type"].to_numpy()
 
-        # labels = np.zeros(len(cell_types)).astype(int)
-        # name_to_label = {}
-        # label_to_name = {}
-        # tests = []
-        # for i, phase in enumerate(np.unique(cell_types)):
-        #    tests.append(phase)
-        #    label_to_name[i] = phase
-        #    name_to_label[phase] = i
-        #    labels[cell_types == phase] = i
+        string_labels = np.unique(cell_types)
+        # string_labels = np.array([cell_type[1:] for cell_type in string_labels])
+
+        return list(string_labels)
+
+
+class PBMC_new(CustomDataset):
+    """
+    Load the PBMC dataset
+    """
+
+    def __init__(self, dir_path=None, n_samples=0, *args, **kwargs):
+        if dir_path is not None:
+            self.dir_path = dir_path
+            super().__init__(n_samples=n_samples, *args, **kwargs)
+
+    def create(self):
+        pca50 = np.load(os.path.join(self.dir_path, "pca50.npy"))
+        pca50 = torch.from_numpy(pca50)
+
+        meta = pd.read_csv(os.path.join(self.dir_path, "zheng17-cell-labels.txt"), sep="\t", header=None, skiprows=1)
+        meta = meta.to_numpy()[:, 1]
+        cell_types = np.squeeze(meta)
+        # meta = np.ones(68579)
+
+        # with open(os.path.join(self.dir_path, "zheng17-cell-labels.txt")) as file:
+        #    lines = file.readlines()
+        # lines = [line.split("\t") for line in lines]
+        # for line in lines:
+        #    lines[1] = line[1].removesuffix("\n")
+        # lines = np.array(lines)[1:]
+        # meta = lines
+
+
+        labels = np.zeros(len(cell_types)).astype(int)
+        for i, phase in enumerate(np.unique(cell_types)):
+            labels[cell_types == phase] = i
+
+        labels = torch.tensor(labels)
+
+        # get only n samples
+        # idx = torch.randperm(labels.shape[0])[:self.n_samples]
+        # pca50 = pca50[idx]
+        # labels = labels[idx]
+
+        pca50 = pca50.float()
+        labels = labels.float()
+
+        return pca50, labels
+
+    @staticmethod
+    def transform_labels(dir_path):
+        # meta = pd.read_csv(os.path.join(dir_path, "barcodes.txt"), sep="\t", header=None)
+        meta = pd.read_csv(os.path.join(dir_path, "zheng17-cell-labels.txt"), sep="\t", header=None, skiprows=1)
+        meta = meta.to_numpy()[:, 1]
+
+        cell_types = np.squeeze(meta)
 
         string_labels = np.unique(cell_types)
         # string_labels = np.array([cell_type[1:] for cell_type in string_labels])

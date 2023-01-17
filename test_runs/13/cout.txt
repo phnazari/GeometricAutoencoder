@@ -1,0 +1,3 @@
+INFO: Running command 'train'
+INFO: Started run with ID "13"
+INFO: Result: {'training.loss': 0.03588493480347097, 'training.loss.autoencoder': 0.03576334325397121, 'training.loss.geom_error': 0.0012159150869203066, 'training.reconstruction_error': 0.03576334325397121}
