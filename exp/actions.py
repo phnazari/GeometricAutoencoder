@@ -27,8 +27,6 @@ def convert():
         if len(subdir.split("/")) == 15 and subdir.split("/")[-1] == "ParametricUMAP":
             paths.append(subdir)
 
-    paths = ["/export/home/pnazari/workspace/AutoEncoderVisualization/save_config/2"]
-
     for i, path in enumerate(paths):
         print(f"{i} of {len(paths)}")
 

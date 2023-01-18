@@ -32,24 +32,24 @@ output_pattern_competitor='experiments/fit_competitor/repetitions/{rep}/{config}
 #  --name dummy2 --set evaluation.evaluate_on='test' \
 #  --output-pattern ${output_pattern}
 
-#python3 scripts/configs_from_product.py exp.fit_competitor \
-#  --name config \
-#  --set \
-#  experiments/fit_competitor/best_runs/MNIST/ParametricUMAP_default.json \
-#  experiments/fit_competitor/best_runs/FashionMNIST/ParametricUMAP_default.json \
-#  experiments/fit_competitor/best_runs/PBMC_new/ParametricUMAP_default.json \
-#  experiments/fit_competitor/best_runs/Zilionis/ParametricUMAP_default.json \
-#  experiments/fit_competitor/best_runs/CElegans/ParametricUMAP_default.json \
-#  --name rep --set rep1 rep2 rep3 rep4 rep5 \
-#  --name dummy --set evaluation.active=True \
-#  --name dummy2 --set evaluation.evaluate_on='test' \
-#  --output-pattern ${output_pattern_competitor}
-
 python3 scripts/configs_from_product.py exp.fit_competitor \
   --name config \
   --set \
+  experiments/fit_competitor/best_runs/MNIST/ParametricUMAP_default.json \
+  experiments/fit_competitor/best_runs/FashionMNIST/ParametricUMAP_default.json \
   experiments/fit_competitor/best_runs/PBMC_new/ParametricUMAP_default.json \
-  --name rep --set rep1 rep2 rep3 rep4 \
-  --name dummy --set evaluation.active=False \
+  experiments/fit_competitor/best_runs/Zilionis/ParametricUMAP_default.json \
+  experiments/fit_competitor/best_runs/CElegans/ParametricUMAP_default.json \
+  --name rep --set rep1 rep2 rep3 rep4 rep5 \
+  --name dummy --set evaluation.active=True \
   --name dummy2 --set evaluation.evaluate_on='test' \
   --output-pattern ${output_pattern_competitor}
+
+#python3 scripts/configs_from_product.py exp.fit_competitor \
+#  --name config \
+#  --set \
+#  experiments/fit_competitor/best_runs/PBMC_new/ParametricUMAP_default.json \
+#  --name rep --set rep1 rep2 rep3 rep4 \
+#  --name dummy --set evaluation.active=False \
+#  --name dummy2 --set evaluation.evaluate_on='test' \
+#  --output-pattern ${output_pattern_competitor}

@@ -1,3 +1,0 @@
-INFO: Running command 'train'
-INFO: Started run with ID "12"
-INFO: Result: {'training.loss': 0.03565073679866535, 'training.loss.autoencoder': 0.03552906558117164, 'training.loss.geom_error': 0.0012167118980349707, 'training.reconstruction_error': 0.03552906558117164}

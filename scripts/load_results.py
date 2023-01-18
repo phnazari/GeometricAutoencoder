@@ -99,8 +99,8 @@ used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_tr
                  'spearman_metric', '_mse', 'reconstruction']
 
 # use for aggregated, i.e. without MSE
-# used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_trustworthiness',
-#                'spearman_metric']
+used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_trustworthiness',
+                 'spearman_metric']
 
 # mean_neighbourhood_loss, mean_continuity, mean_rank_correlation, mean_mrre, stress, density_global
 
@@ -265,8 +265,7 @@ col_mapping = {'test_density_kl_global_0001': '$\dkl_{0.001}$',
 # use for non aggregated, i.e. with MSE
 order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear', 'MSE']
 # use for aggregated, i.e. without MSE
-# order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear']
-
+order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear']
 
 larger_is_better = {
     '$\dkl_{0.001}$': 0,

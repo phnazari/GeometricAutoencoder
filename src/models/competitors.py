@@ -44,10 +44,10 @@ class ParametricUMAP(ParametricUMAP_vanilla):
                 tf.keras.layers.InputLayer(input_shape=input_dim),
                 tf.keras.layers.Activation("elu"),
                 tf.keras.layers.Flatten(),
-                tf.keras.layers.Dense(units=100, activation="elu"),  # , kernel_regularizer=l2(1e-5)),
-                tf.keras.layers.Dense(units=100, activation="elu"),
-                tf.keras.layers.Dense(units=100, activation="elu"),
-                tf.keras.layers.Dense(units=100, activation="elu"),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
                 tf.keras.layers.Dense(units=latent_dim, name="z"),
             ]
         )
@@ -56,10 +56,10 @@ class ParametricUMAP(ParametricUMAP_vanilla):
             [
                 tf.keras.layers.InputLayer(input_shape=latent_dim),
                 tf.keras.layers.Activation("elu"),
-                tf.keras.layers.Dense(units=100, activation="elu"),
-                tf.keras.layers.Dense(units=100, activation="elu"),
-                tf.keras.layers.Dense(units=100, activation="elu"),
-                tf.keras.layers.Dense(units=100, activation="elu"),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
+                tf.keras.layers.Dense(units=100, activation="elu", kernel_regularizer=l2(1e-5)),
                 tf.keras.layers.Dense(
                     units=input_dim, name="recon", activation=None
                 ),
@@ -75,5 +75,5 @@ class ParametricUMAP(ParametricUMAP_vanilla):
                          min_dist=min_dist,
                          n_components=n_components,
                          n_neighbors=n_neighbors,
-                         batch_size=125
+                         # batch_size=125
                          )

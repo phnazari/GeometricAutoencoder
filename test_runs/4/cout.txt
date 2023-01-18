@@ -1,3 +1,0 @@
-INFO: Running command 'train'
-INFO: Started run with ID "4"
-INFO: Result: {'training.loss': 0.0351648416403415, 'training.reconstruction_error': 0.0351648416403415}
