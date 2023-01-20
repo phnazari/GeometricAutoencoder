@@ -1,16 +1,12 @@
 stuff/*
-tests/output
-.idea
-data/raw
 *_sources*
+.idea
 
-exp/output
 
 DS_Store
 _.DS_Store
 Pipfile.lock
 __pycache__/
-data/raw
 notebooks/.ipynb_checkpoints/
 exp_runs/
 *~
@@ -26,3 +22,7 @@ tex_Geom/*
 save_config/*
 test_runs/*
 
+exp/output
+data/raw/*
+!data/raw/earth/
+tests/output

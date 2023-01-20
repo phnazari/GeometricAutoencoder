@@ -43,9 +43,6 @@ for dataset in datasets:
 
         model_paths.append(os.path.join(base, dir, "evaluation/repetitions/rep1", dataset, model, "model_state.pth"))
 
-# model_paths = [os.path.join("/export/home/pnazari/workspace/AutoEncoderVisualization/save_config/MNIST/ParametricUMAP",
-#                            "model_state.pth")]
-
 for i, model_path in enumerate(model_paths):
     img_path = model_path.split("/")[-2]
     dataset = model_path.split("/")[-3]

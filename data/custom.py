@@ -214,7 +214,6 @@ class Zilionis(CustomDataset):
             std_dataset = torch.std(self.dataset, dim=1)
             self.dataset = (self.dataset - mean_dataset[:, None]) / std_dataset[:, None]
 
-    # curtesy of https://github.com/hci-unihd/UMAPs-true-loss/blob/master/notebooks/UMAP_lung_cancer.ipynb
     def create(self):
         """
         Generate a figure-8 dataset.
@@ -317,7 +316,6 @@ class CElegans(CustomDataset):
             # std_dataset = torch.std(self.dataset, dim=1)
             # self.dataset = (self.dataset - mean_dataset[:, None]) / std_dataset[:, None]
 
-    # curtesy of https://github.com/hci-unihd/UMAPs-true-loss/blob/master/notebooks/UMAP_lung_cancer.ipynb
     def create(self):
         pca100 = pd.read_csv(os.path.join(self.dir_path, "c-elegans_qc_final.txt"), sep='\t', header=None)
         meta = pd.read_csv(os.path.join(self.dir_path, "c-elegans_qc_final_metadata.txt"), sep=",", header=0)

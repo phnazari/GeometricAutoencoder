@@ -2,8 +2,12 @@ import os
 from datetime import timedelta
 
 import numpy as np
+from conf import device
 from src.datasets.pbmc_new import PBMC_new
-from data.handle_data import load_data
+from data.handle_data import load_data, data_forward
+from src.diffgeo.connections import LeviCivitaConnection
+from src.diffgeo.manifolds import RiemannianManifold
+from src.diffgeo.metrics import PullbackMetric
 from src.models import GeometricAutoencoder
 from umap.parametric_umap import load_ParametricUMAP, ParametricUMAP
 import json
@@ -13,7 +17,7 @@ os.environ["GEOMSTATS_BACKEND"] = "pytorch"
 import torch
 from matplotlib import pyplot as plt
 import dateutil.parser
-from util import get_saving_kwargs, get_sc_kwargs
+from util import get_saving_kwargs, get_sc_kwargs, get_coordinates
 from src.models.submodules import BoxAutoEncoder
 import matplotlib as mpl
 
@@ -358,9 +362,83 @@ def create_colorbar():
         plt.show()
 
 
-def test_dataset():
-    dataset = PBMC_new(train=True, )
-    print(dataset.labels)
+def pullback_metric_condition():
+    # num_steps = 20
+    coords0 = None
+    dataset_name = "MNIST"
+
+    input_dim = 784
+    latent_dim = 2
+    input_dims = (1, 28, 28)
+
+    base = os.path.join(os.path.dirname(__file__), '..', "experiments")
+
+    condition_numbers = {
+        "Vanilla": [],
+        "GeomReg": [],
+        "TopoReg": [],
+        "ParametricUMAP": []
+    }
+
+    model_paths = [
+        os.path.join(base, "train_model", "evaluation/repetitions/rep1", "MNIST", "Vanilla", "model_state.pth"),
+        os.path.join(base, "train_model", "evaluation/repetitions/rep1", "MNIST", "GeomReg", "model_state.pth"),
+        os.path.join(base, "train_model", "evaluation/repetitions/rep1", "MNIST", "TopoReg", "model_state.pth"),
+        os.path.join(base, "fit_competitor", "evaluation/repetitions/rep1", "MNIST", "ParametricUMAP",
+                     "model_state.pth"),
+    ]
+
+    for model_path in model_paths:
+        model = BoxAutoEncoder(input_shape=input_dim, latent_dim=latent_dim, input_dims=input_dims).to(device)
+        model.load(model_path)
+
+        model_name = model_path.split("/")[-2]
+
+        train_loader, _ = load_data(train_batch_size=256,
+                                    test_batch_size=256,
+                                    dataset=dataset_name)
+
+        _, _, latent_activations, labels = data_forward(model, train_loader)
+        latent_activations = latent_activations.detach().cpu()
+
+        # if taken from a regular grid
+        num_steps = 100
+        coordinates = get_coordinates(latent_activations,
+                                      grid="convex_hull",
+                                      num_steps=num_steps,
+                                      coords0=coords0,
+                                      dataset_name=dataset_name,
+                                      model_name=model_name).to(device)
+
+        # if taken from the data
+        # n_samples = len(latent_activations)
+        # generator = torch.Generator().manual_seed(0)
+        # perm = torch.randperm(latent_activations.shape[0], generator=generator)
+        # coordinates = latent_activations[perm[:n_samples]].to(device)
+
+        pbm = PullbackMetric(2, model.decoder)
+        lcc = LeviCivitaConnection(2, pbm)
+        rm = RiemannianManifold(2, (1, 1), metric=pbm, connection=lcc)
+        # metric at the point
+        metric_matrices = rm.metric.metric_matrix(coordinates)
+
+        cond = torch.linalg.cond(metric_matrices)
+
+        condition_numbers[model_name] = cond
+
+    mean_cond_van = torch.mean(condition_numbers["Vanilla"])
+    std_cond_van = torch.std(condition_numbers["Vanilla"])
+    mean_cond_geom = torch.mean(condition_numbers["GeomReg"])
+    std_cond_geom = torch.std(condition_numbers["GeomReg"])
+    mean_cond_topo = torch.mean(condition_numbers["TopoReg"])
+    std_cond_topo = torch.std(condition_numbers["TopoReg"])
+    mean_cond_umap = torch.mean(condition_numbers["ParametricUMAP"])
+    std_cond_umap = torch.std(condition_numbers["ParametricUMAP"])
+
+    print("Vanilla", mean_cond_van, std_cond_van)
+    print("GeomReg", mean_cond_geom, std_cond_geom)
+    print("TopoReg", mean_cond_topo, std_cond_topo)
+    print("PUMAP", mean_cond_umap, std_cond_umap)
 
 
-convert()
+pullback_metric_condition()
