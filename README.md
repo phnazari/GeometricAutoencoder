@@ -27,7 +27,17 @@ While TorchVision takes care of the MNIST and FashionMNIST datasets, you will ha
 csail.mit.edu/cb/densvis/datasets/) the PBMC, Zilionis and CElegans datasets yourself.
 
 ## Reproducing the Results
-If you want to reproduce our results, say for MNIST, you can train a Geometric Autoencoder by executing
+
+### TL; DR
+If you want to reproduce our results for MNIST, you can do so by executing
+
+```
+bash main.sh
+```
+
+### More Detailed
+
+What happens in this case, is that you first train a Geometric Autoencoder by executing
 ```
 bash scripts/create/eval/configs.sh.
 ```
@@ -46,4 +56,7 @@ and the quantitative metrics by executing
 python3 scripts/load_results.py
 ```
 
+
+## The Differential Geometry
+The differential geometry can be found inside directory `src/diffgeo`. Our geometric regularizer is implemented in `src/criterions.py`.
 
