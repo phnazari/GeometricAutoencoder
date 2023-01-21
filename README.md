@@ -23,8 +23,8 @@ cd GeometricAutoencoder
 pip3 install -r requirements.txt
 ```
 
-While TorchVision takes care of the MNIST and FashionMNIST datasets, you will have to [download](http://cb.
-csail.mit.edu/cb/densvis/datasets/) the PBMC, Zilionis and CElegans datasets yourself.
+While TorchVision takes care of the MNIST and FashionMNIST datasets, you will have to download the PBMC, Zilionis and CElegans datasets from http://cb.
+csail.mit.edu/cb/densvis/datasets/ .
 
 ## Reproducing the Results
 
