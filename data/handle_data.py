@@ -1,3 +1,7 @@
+"""
+Handle all Datasets, f.e. using DataLoaders
+"""
+
 import conf
 import torch
 import torchvision
@@ -41,7 +45,6 @@ def load_data(train_batch_size=128, test_batch_size=32, dataset="MNIST"):
         return
 
     # While visualizing, we want to evaluate on the same data we trained on
-
     if not test_separate:
         test_dataset = train_dataset
 
@@ -49,11 +52,6 @@ def load_data(train_batch_size=128, test_batch_size=32, dataset="MNIST"):
 
     train_loader = torch.utils.data.DataLoader(train_dataset, batch_size=train_batch_size,
                                                num_workers=16)  # shuffle=True, pin_memory=True
-
-    #  for i, (batch_features, _) in enumerate(train_loader):
-    #     # print(torch.max(batch_features), torch.min(batch_features))
-    #     test = torch.mean(batch_features, dim=3)
-    #     print(batch_features.shape, test.shape, torch.unique(test))
 
     return train_loader, test_loader
 
@@ -65,9 +63,6 @@ def data_forward(model, test_loader):
     labels = torch.tensor([])
 
     for k, (batch_features, batch_labels) in enumerate(test_loader):
-        # do that in order to get activations at latent layer
-        # print(batch_features.shape)
-
         batch_features = batch_features.to(device)
         output = model.forward_(batch_features)
 
@@ -81,13 +76,11 @@ def data_forward(model, test_loader):
             outputs = torch.vstack((outputs, output))
             latent_activations = torch.vstack((latent_activations, model.latent_activations))
 
-            # vstack: batch_labels.shape = (256, 3)
             if batch_labels.ndim == 1:
                 labels = torch.hstack((labels, batch_labels))
             else:
                 labels = torch.vstack((labels, batch_labels))
 
-    # if model.__class__.__name__ in ["DeepAE", "BoxAutoEncoder"]:  # and False:
     outputs = outputs.view(-1, model.input_dim)
 
     return inputs, outputs, latent_activations, labels

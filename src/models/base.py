@@ -1,3 +1,8 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
+
 """Base class for autoencoder models."""
 import abc
 from typing import Dict, Tuple

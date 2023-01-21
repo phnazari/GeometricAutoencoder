@@ -1,3 +1,8 @@
+"""
+THIS FILE WAS PARTLY TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
+
 """Vanilla models."""
 from src.criterions import DeterminantLoss
 

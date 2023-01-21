@@ -1,3 +1,7 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
 """Module containing sacred functions for handling ML models."""
 import inspect
 

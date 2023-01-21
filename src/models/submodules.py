@@ -1,3 +1,8 @@
+"""
+THIS FILE WAS PARTLY TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
+
 """Submodules used by models."""
 import numpy as np
 import torch

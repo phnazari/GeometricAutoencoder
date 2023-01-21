@@ -1,3 +1,7 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
 import os
 
 from sacred import Experiment

@@ -1,3 +1,7 @@
+"""
+DiffGeo file containing everything related to a manifold
+"""
+
 import os
 import traceback
 

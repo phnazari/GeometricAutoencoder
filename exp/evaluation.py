@@ -1,9 +1,12 @@
+"""
+Evaluate a specific model. Invoked by analysis.py
+"""
+
 import os
 from datetime import datetime
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 import torch
 
 from src.diagnostics.metric_properties import plot_determinants, plot_indicatrices
@@ -83,7 +86,6 @@ def evaluate(writer_dir=None,
     Path(model_path_save).mkdir(parents=True, exist_ok=True)
 
     # set and create path for saving images
-
     image_save_path = os.path.join(output_path,
                                    f"graphics/{dataset_name}/{AE.__name__}/{datetime.now().strftime('%Y.%m.%d')}/",
                                    img_path)
@@ -104,6 +106,7 @@ def evaluate(writer_dir=None,
     else:
         cmap = "tab10"
 
+    # number of steps to take for indicatrices, in x direction
     if model_name == "ParametricUMAP":
         if dataset_name == "MNIST":
             num_steps = 15
@@ -133,38 +136,13 @@ def evaluate(writer_dir=None,
     if dataset_name == "Earth":
         num_steps = 10
 
-    # elif dataset_name == "PBMC":
-    #     #if model_name == "Vanilla":
-    #     #    num_steps = 20
-    #     #elif model_name == "FashionMNIST":
-    #     #    num_steps = 15
-    #     else:
-    #         num_steps = 10
-    # elif dataset_name == "Zilionis":
-    #    #if model_name == "Vanilla":
-    #    #    num_steps = 20
-    #    else:
-    #        num_steps = 10
-    # else:
-    #    num_steps = 10
-
-    # number of angles for indicatrices
+    # number of samples for indicatrix approximation
     num_gon = 500
-
-    # create diagnostics
-    # if input_dim == 3:
-    #    # plot input dataset
-    #    plot_dataset(model,
-    #                 train_loader,
-    #                 input_dim=input_dim,
-    #                 writer=writer,
-    #                 output_path=os.path.join(image_save_path, "dataset.png")
-    #                 )
 
     if model_name in ["Vanilla", "TopoReg", "GeomReg", "ParametricUMAP"]:
         # create model
         print(f"[model] move to {device}...")
-        model = AE(input_shape=input_dim, latent_dim=latent_dim, input_dims=input_dims).to(device)  # , input_dims=(3, )
+        model = AE(input_shape=input_dim, latent_dim=latent_dim, input_dims=input_dims).to(device)
         model.load(model_path)
 
         if "determinants" in used_diagnostics:
@@ -229,18 +207,6 @@ def evaluate(writer_dir=None,
 
         if "embedding" in used_diagnostics:
             # plot latent space
-
-            # if model_name in ["TSNE", "UMAP"]:
-            #     meta = pd.read_csv(os.path.join(os.path.dirname(__file__), "../data/raw/pbmc_new", "zheng17-cell-labels.txt"), sep="\t", header=None, skiprows=1)
-            #    meta = meta.to_numpy()[:, 1]
-            #    cell_types = np.squeeze(meta)
-
-            #    labels = np.zeros(len(cell_types)).astype(int)
-            #    for i, phase in enumerate(np.unique(cell_types)):
-            #        labels[cell_types == phase] = i
-
-            #    labels = torch.tensor(labels)
-
             plot_latent_space(model, train_loader, cmap=cmap, dataset_name=dataset_name,
                               output_path=os.path.join(image_save_path, "latents.png"), writer=writer,
                               latent_activations=latent_activations, labels=labels)

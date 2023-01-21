@@ -16,6 +16,9 @@ except ImportError:
 
 
 class ParametricUMAP(ParametricUMAP_vanilla):
+    """
+    ParametricUMAP initialized as an autoencoder, trained with the MSE
+    """
     def __init__(self,
                  min_dist=0.1,
                  n_components=2,

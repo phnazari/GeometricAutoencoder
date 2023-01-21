@@ -1,3 +1,8 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
+
 '''
 Utility functions for calculating dimensionality reduction quality
 measures for evaluating the latent space.

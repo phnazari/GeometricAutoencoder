@@ -1,3 +1,7 @@
+"""
+DiffGeo file containing everything related to the pullback metric
+"""
+
 import os
 
 import geomstats.backend as gs

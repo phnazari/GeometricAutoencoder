@@ -1,3 +1,8 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
+
 """Callbacks for training loop."""
 import os
 from tqdm import tqdm

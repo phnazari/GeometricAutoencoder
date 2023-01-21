@@ -1,5 +1,8 @@
+"""
+Run the qualitative evaluation using Indictrices and the Generalized Jacobian Determinant
+"""
+
 import os
-import torch
 
 os.environ["GEOMSTATS_BACKEND"] = "pytorch"
 
@@ -7,15 +10,18 @@ from evaluation import evaluate
 
 model_paths = []
 
+
+# Which Datasets should be considered for the evaluation
 datasets = [
-    # "MNIST",
-    "Earth",
+    "MNIST",
+    # "Earth",
     # "FashionMNIST",
     # "CElegans",
     # "Zilionis_normalized",
     # "PBMC_new"
 ]
 
+# Which models should be considered for the evaluation
 models = [
     # "Vanilla",
     # "TopoReg",
@@ -27,8 +33,8 @@ models = [
 ]
 
 diagnostics = [
-    # "indicatrices",
-    # "determinants",
+    "indicatrices",
+    "determinants",
     "embedding"
 ]
 

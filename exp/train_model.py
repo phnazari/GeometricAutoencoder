@@ -1,3 +1,7 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
 """Module to train a model with a dataset configuration."""
 import os
 

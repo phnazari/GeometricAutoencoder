@@ -1,4 +1,3 @@
-"""Topolologically regularized autoencoder using approximation."""
 import numpy as np
 import torch
 import torch.nn as nn
@@ -9,8 +8,82 @@ from src.models import submodules
 from src.models.base import AutoencoderModel
 
 
+class GeometricAutoencoder(AutoencoderModel):
+    """Geometrically regularized autoencoder."""
+
+    def __init__(self, lam=1., autoencoder_model='ConvolutionalAutoencoder',
+                 ae_kwargs=None, toposig_kwargs=None):
+        """Topologically Regularized Autoencoder.
+
+        Args:
+            lam: Regularization strength
+            ae_kwargs: Kewords to pass to `ConvolutionalAutoencoder` class
+            toposig_kwargs: Keywords to pass to `TopologicalSignature` class
+        """
+        super().__init__()
+        self.lam = lam
+        ae_kwargs = ae_kwargs if ae_kwargs else {}
+        # toposig_kwargs = toposig_kwargs if toposig_kwargs else {}
+        # self.topo_sig = TopologicalSignatureDistance(**toposig_kwargs)
+        self.autoencoder = getattr(submodules, autoencoder_model)(**ae_kwargs)
+        self.latent_norm = torch.nn.Parameter(data=torch.ones(1),
+                                              requires_grad=True)
+
+        self.determinant_criterion = DeterminantLoss(model=self.autoencoder)
+
+        self.register_hook()
+
+    def forward(self, x):
+        """Compute the loss of the Topologically regularized autoencoder.
+
+        Args:
+            x: Input data
+
+        Returns:
+            Tuple of final_loss, (...loss components...)
+
+        """
+
+        # Use reconstruction loss of autoencoder
+        ae_loss, ae_loss_comp = self.autoencoder(x)
+
+        det_loss = self.determinant_criterion()
+
+        loss = ae_loss + self.lam * det_loss
+        loss_components = {
+            'loss.autoencoder': ae_loss,
+            'loss.geom_error': det_loss
+        }
+
+        loss_components.update(ae_loss_comp)
+        return (
+            loss,
+            loss_components
+        )
+
+    def encode(self, x):
+        return self.autoencoder.encode(x)
+
+    def decode(self, z):
+        return self.autoencoder.decode(z)
+
+    def register_hook(self):
+        self.autoencoder.encoder.register_forward_hook(self.get_activation())
+
+    def get_activation(self):
+        """
+        :return: activations at layer model
+        """
+
+        def hook(model, input, output):
+            self.autoencoder.latent_activations = output
+            self.autoencoder.latent_activations_detached = output.detach()
+
+        return hook
+
+
 class TopologicallyRegularizedAutoencoder(AutoencoderModel):
-    """Topologically regularized autoencoder."""
+    """Topologically regularized autoencoder, from the Topological Autoenocoder paper"""
 
     def __init__(self, lam=1., autoencoder_model='ConvolutionalAutoencoder',
                  ae_kwargs=None, toposig_kwargs=None):
@@ -103,80 +176,6 @@ class TopologicallyRegularizedAutoencoder(AutoencoderModel):
 
     def decode(self, z):
         return self.autoencoder.decode(z)
-
-
-class GeometricAutoencoder(AutoencoderModel):
-    """Topologically regularized autoencoder."""
-
-    def __init__(self, lam=1., autoencoder_model='ConvolutionalAutoencoder',
-                 ae_kwargs=None, toposig_kwargs=None):
-        """Topologically Regularized Autoencoder.
-
-        Args:
-            lam: Regularization strength
-            ae_kwargs: Kewords to pass to `ConvolutionalAutoencoder` class
-            toposig_kwargs: Keywords to pass to `TopologicalSignature` class
-        """
-        super().__init__()
-        self.lam = lam
-        ae_kwargs = ae_kwargs if ae_kwargs else {}
-        # toposig_kwargs = toposig_kwargs if toposig_kwargs else {}
-        # self.topo_sig = TopologicalSignatureDistance(**toposig_kwargs)
-        self.autoencoder = getattr(submodules, autoencoder_model)(**ae_kwargs)
-        self.latent_norm = torch.nn.Parameter(data=torch.ones(1),
-                                              requires_grad=True)
-
-        self.determinant_criterion = DeterminantLoss(model=self.autoencoder)
-
-        self.register_hook()
-
-    def forward(self, x):
-        """Compute the loss of the Topologically regularized autoencoder.
-
-        Args:
-            x: Input data
-
-        Returns:
-            Tuple of final_loss, (...loss components...)
-
-        """
-
-        # Use reconstruction loss of autoencoder
-        ae_loss, ae_loss_comp = self.autoencoder(x)
-
-        det_loss = self.determinant_criterion()
-
-        loss = ae_loss + self.lam * det_loss
-        loss_components = {
-            'loss.autoencoder': ae_loss,
-            'loss.geom_error': det_loss
-        }
-
-        loss_components.update(ae_loss_comp)
-        return (
-            loss,
-            loss_components
-        )
-
-    def encode(self, x):
-        return self.autoencoder.encode(x)
-
-    def decode(self, z):
-        return self.autoencoder.decode(z)
-
-    def register_hook(self):
-        self.autoencoder.encoder.register_forward_hook(self.get_activation())
-
-    def get_activation(self):
-        """
-        :return: activations at layer model
-        """
-
-        def hook(model, input, output):
-            self.autoencoder.latent_activations = output
-            self.autoencoder.latent_activations_detached = output.detach()
-
-        return hook
 
 
 class TopologicalSignatureDistance(nn.Module):

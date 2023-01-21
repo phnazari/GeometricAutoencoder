@@ -1,3 +1,7 @@
+"""
+DiffGeo file containing everything related to a connection
+"""
+
 import os
 
 import geomstats.backend as gs

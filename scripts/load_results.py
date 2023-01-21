@@ -1,3 +1,7 @@
+"""
+THIS FILE WAS PARTLY TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
 from pathlib import Path
 import os
 import math

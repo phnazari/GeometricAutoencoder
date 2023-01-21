@@ -1,3 +1,7 @@
+"""
+THIS FILE WAS PARTLY TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
 """Callbacks specific to sacred."""
 import os
 from collections import defaultdict

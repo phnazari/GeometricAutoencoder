@@ -1,3 +1,7 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
 """Create config files for dataset model combinations."""
 import argparse
 import itertools

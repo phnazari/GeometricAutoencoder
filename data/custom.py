@@ -1,3 +1,7 @@
+"""
+Create Custom Datasets
+"""
+
 import json
 import os
 import pyreadr
@@ -21,9 +25,7 @@ class CustomDataset(Dataset):
 
     def __init__(self, n_samples=0, noise=0.0, train=True):
         """
-        Create a SwissRoll Dataset
-        :param n_samples: number of samples for one role
-        :param noise: standard deviation of the gaussian noise
+        Base Class for a Custom Dataset
         """
 
         super().__init__()
@@ -57,23 +59,12 @@ class CustomDataset(Dataset):
                                                                      [train_size, test_size, rest],
                                                                      generator=torch.Generator().manual_seed(42))
 
-        # g = torch.Generator()
-        # g.manual_seed(seed)
-        # test_idx = torch.randperm(len(self.dataset), generator=g)[:test_size]
-
         if self.train:
             self.n_samples = len(self.dataset)
         else:
             self.n_samples = test_size
             self.dataset = self.dataset[test_subset.indices]
             self.labels = self.labels[test_subset.indices]
-
-        # if self.n_samples != 0:
-        #    test_dataset = self.dataset[:self.n_samples]
-        #    test_labels = self.labels[:self.n_samples]
-
-        # print(torch.any(self.dataset != test_dataset))
-        # print(torch.any(self.labels != test_labels))
 
     def __len__(self):
         return self.n_samples
@@ -125,16 +116,8 @@ class Earth(CustomDataset):
         """
 
         data = torch.load(self.filename)
-
-        # idx = torch.randperm(data.shape[0])[:self.n_samples]
-        # data = data[idx]
-
         xs, ys, zs, labels = torch.unbind(data, dim=-1)
         dataset = torch.vstack((xs, ys, zs)).T.float()
-
-        # dataset, labels = torch.unbind(data, dim=-1)
-        # dataset = data[idx, :, :, :].float()
-        # labels = data[idx, ]
 
         return dataset, labels
 
@@ -231,12 +214,6 @@ class Zilionis(CustomDataset):
             labels[cell_types == phase] = i
 
         labels = torch.tensor(labels)
-
-        # get only n samples
-        # idx = torch.randperm(labels.shape[0])[:self.n_samples]
-        # pca306 = pca306[idx]
-        # labels = labels[idx]
-
         pca306 = pca306.float()
         labels = labels.float()
 
@@ -281,11 +258,6 @@ class PBMC(CustomDataset):
 
         labels = torch.tensor(labels)
 
-        # get only n samples
-        # idx = torch.randperm(labels.shape[0])[:self.n_samples]
-        # pca50 = pca50[idx]
-        # labels = labels[idx]
-
         pca50 = pca50.float()
         labels = labels.float()
 
@@ -297,7 +269,6 @@ class PBMC(CustomDataset):
         cell_types = np.squeeze(meta.to_numpy())
 
         string_labels = np.unique(cell_types)
-        # string_labels = np.array([cell_type[1:] for cell_type in string_labels])
 
         return list(string_labels)
 
@@ -311,10 +282,6 @@ class CElegans(CustomDataset):
         if dir_path is not None:
             self.dir_path = dir_path
             super().__init__(n_samples=n_samples, *args, **kwargs)
-
-            # mean_dataset = torch.mean(self.dataset, dim=1)
-            # std_dataset = torch.std(self.dataset, dim=1)
-            # self.dataset = (self.dataset - mean_dataset[:, None]) / std_dataset[:, None]
 
     def create(self):
         pca100 = pd.read_csv(os.path.join(self.dir_path, "c-elegans_qc_final.txt"), sep='\t', header=None)
@@ -346,8 +313,6 @@ class CElegans(CustomDataset):
         cell_types = meta["cell.type"].to_numpy()
 
         string_labels = np.unique(cell_types)
-        # string_labels = np.array([cell_type[1:] for cell_type in string_labels])
-
         return list(string_labels)
 
 
@@ -368,27 +333,12 @@ class PBMC_new(CustomDataset):
         meta = pd.read_csv(os.path.join(self.dir_path, "zheng17-cell-labels.txt"), sep="\t", header=None, skiprows=1)
         meta = meta.to_numpy()[:, 1]
         cell_types = np.squeeze(meta)
-        # meta = np.ones(68579)
-
-        # with open(os.path.join(self.dir_path, "zheng17-cell-labels.txt")) as file:
-        #    lines = file.readlines()
-        # lines = [line.split("\t") for line in lines]
-        # for line in lines:
-        #    lines[1] = line[1].removesuffix("\n")
-        # lines = np.array(lines)[1:]
-        # meta = lines
-
 
         labels = np.zeros(len(cell_types)).astype(int)
         for i, phase in enumerate(np.unique(cell_types)):
             labels[cell_types == phase] = i
 
         labels = torch.tensor(labels)
-
-        # get only n samples
-        # idx = torch.randperm(labels.shape[0])[:self.n_samples]
-        # pca50 = pca50[idx]
-        # labels = labels[idx]
 
         pca50 = pca50.float()
         labels = labels.float()
@@ -397,13 +347,11 @@ class PBMC_new(CustomDataset):
 
     @staticmethod
     def transform_labels(dir_path):
-        # meta = pd.read_csv(os.path.join(dir_path, "barcodes.txt"), sep="\t", header=None)
         meta = pd.read_csv(os.path.join(dir_path, "zheng17-cell-labels.txt"), sep="\t", header=None, skiprows=1)
         meta = meta.to_numpy()[:, 1]
 
         cell_types = np.squeeze(meta)
 
         string_labels = np.unique(cell_types)
-        # string_labels = np.array([cell_type[1:] for cell_type in string_labels])
 
         return list(string_labels)

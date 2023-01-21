@@ -1,3 +1,7 @@
+"""
+The Determinant Regularizer
+"""
+
 import torch
 
 from conf import LOWER_EPSILON, UPPER_EPSILON, device
@@ -8,6 +12,9 @@ from src.diffgeo.connections import LeviCivitaConnection
 
 
 class Loss:
+    """
+    A Basis class for custom loss functions
+    """
     def __init__(self, model=None):
         # a manifold object
         self.model = model
@@ -40,6 +47,15 @@ class Loss:
 
 class DeterminantLoss(Loss):
     def __call__(self, epoch=0, *args, **kwargs):
+        """
+            Our Determinant Regularizer
+        Args:
+            epoch: current epoch
+        Returns:
+
+        """
+
+        # here you can control whether the regularizer should only be switched on after a certain epoch
         if epoch >= 0:
             loss_det = self.determinant_loss()
         else:
@@ -48,14 +64,21 @@ class DeterminantLoss(Loss):
         return loss_det
 
     def determinant_loss(self):
+        """
+        Calculate the actual loss
+        Returns:
+            The determinant loss
+        """
+
+        # calculate the generalized jacobian determinant
         dets = self.manifold.metric_det(base_point=self.model.latent_activations)
 
         # noinspection PyTypeChecker
         log_dets = torch.where((dets > LOWER_EPSILON) & (dets < UPPER_EPSILON),
                                torch.log10(dets),
                                torch.ones_like(dets))
-        # dets = torch.maximum(dets, LOWER_EPSILON * torch.ones_like(dets))
 
+        # calculate the variance of the logarithm of the generalized jacobian determinant
         raw_loss = torch.var(log_dets)
 
         return raw_loss

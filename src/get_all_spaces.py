@@ -1,3 +1,8 @@
+"""
+THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+"""
+
+
 import numpy as np
 
 import os

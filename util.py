@@ -1,3 +1,7 @@
+"""
+Utility functions
+"""
+
 import _pickle
 import math
 import os
@@ -45,9 +49,6 @@ def get_sc_kwargs():
         "linewidth": 0.
     }
 
-    # "c": labels,
-    # "cmap": "tab10",
-
     return sc_kwargs
 
 
@@ -62,11 +63,26 @@ def get_saving_kwargs():
 
 
 def get_coordinates(latent_activations, grid=None, num_steps=20, coords0=None, model_name=None, dataset_name=None):
+    """
+    Get indicatrix positions
+    Args:
+        latent_activations: the embedding considered
+        grid: the type of grid we consider
+        num_steps: the number of steps in the orizontal direction
+        coords0: one fixed coordinate that should be part of thhe grid
+        model_name: the name of the model which created the embedding
+        dataset_name: the name of the dataset considered
+
+    Returns:
+        None
+    """
+
     x_min = torch.min(latent_activations[:, 0]).item()
     x_max = torch.max(latent_activations[:, 0]).item()
     y_min = torch.min(latent_activations[:, 1]).item()
     y_max = torch.max(latent_activations[:, 1]).item()
 
+    # factor to scale the indicatrices by
     if model_name is None:
         factor = 0.3
     elif model_name == "ParametricUMAP":
@@ -192,21 +208,6 @@ def get_coordinates(latent_activations, grid=None, num_steps=20, coords0=None, m
     else:
         coordinates = None
 
-        # if grid == "convex_hull":
-        #    hull = get_hull(latent_activations)
-        #    coordinates = coordinates[in_hull(coordinates, hull)]
-
-        # if grid == "off_data":
-        #    coordinates = []
-        #    xs = torch.linspace(x_min, x_max, steps=10)
-        #    ys = torch.linspace(y_min, y_max, steps=10)
-
-        #    for i, x in enumerate(xs):
-        #        for j, y in enumerate(ys):
-        #            coordinates.append(torch.tensor([x, y]))
-
-        #    coordinates = torch.stack(coordinates)
-
     hull = get_hull(latent_activations)
     coordinates = coordinates[in_hull(coordinates, hull)]
 
@@ -275,15 +276,19 @@ def symlog(x):
 def symlog_inv(x):
     res = torch.where(x > 0, torch.pow(10, x), -torch.pow(10, x))
 
+    return res
+
 
 def minmax(item):
     return (item) / (torch.max(item) - torch.min(item)) + (torch.max(item) - torch.min(item)) / 2
 
 
 def cmap_labels(labels, cmap=cm.turbo):
+    """
+    convert labels
+    """
     # apply cmap and change base
     new_labels = (cmap(labels) * 255).astype(int)
-
     # remove opacity channel from rgba
     new_labels = torch.tensor(new_labels[:, :-1])
 
@@ -291,6 +296,9 @@ def cmap_labels(labels, cmap=cm.turbo):
 
 
 def values_in_quantile(x, q=0):
+    """
+    Get alues in q quantile
+    """
     if q == 1.:
         idx = torch.arange(len(x))
     else:
@@ -471,6 +479,9 @@ def get_next_digit(val, i):
 
 
 def round_significant(data, errors):
+    """
+    Round to first significant digit
+    """
     results = []
 
     i = 0
