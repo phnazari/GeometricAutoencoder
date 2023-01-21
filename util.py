@@ -304,8 +304,6 @@ def values_in_quantile(x, q=0):
 
 
 def determine_scaling_fn(scaling):
-    # TODO: return auch direkt das prefix. Also if lin, return "" else scaling
-
     # determine scaling of curvature values
     scaling_fn = None
     if type(scaling) == str:

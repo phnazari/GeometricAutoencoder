@@ -164,7 +164,6 @@ class GeometricAutoencoder(AutoencoderModel):
     def decode(self, z):
         return self.autoencoder.decode(z)
 
-    # TODO: move those to base autoencoder model, when beautifying code
     def register_hook(self):
         self.autoencoder.encoder.register_forward_hook(self.get_activation())
 

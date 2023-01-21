@@ -99,8 +99,6 @@ class PullbackMetric(RiemannianMetric):
         # problematics = inv_ex.info != 0
         # projector[problematics] = torch.zeros((2, 2), device=device)
 
-        # auf nummer sicher: noch rausprojizieren
-        # TODO: is the projector necessary?
         cometric_matrix = torch.nan_to_num(cometric_matrix, 0, 0, 0)  # * projector
 
         # if torch.any(problematics):

@@ -127,10 +127,6 @@ def train(n_epochs, batch_size, learning_rate, weight_decay, val_size,
                        device=device),
     ]
 
-    # TODO redo
-    # callbacks = []
-
-    # TODO redo
     if quiet:
         # Add newlines between epochs
         callbacks.append(NewlineCallback())
@@ -157,7 +153,6 @@ def train(n_epochs, batch_size, learning_rate, weight_decay, val_size,
     # Run training
     training_loop()
 
-    # TODO redo
     if rundir:
         # Save model state (and entire model)
         print('Loading model checkpoint prior to evaluation...')

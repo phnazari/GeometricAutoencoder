@@ -125,11 +125,16 @@ def plot_loss_curves():
 
     fig, ax = plt.subplots(figsize=(10, 5))
     plt.rcParams.update({'font.size': 15})
-    ax.set_xlabel("epoch", fontsize=15)
-    ax.set_ylabel("Geometric Loss", fontsize=15)
-    ax.tick_params(axis='both', which='major', labelsize=15)
+    plt.rcParams['font.family'] = 'DeJavu Serif'
+    plt.rcParams['font.serif'] = ['Times New Roman']
 
-    plt.rcParams["font.family"] = "Times New Roman"
+    fontdict = {'family': 'DeJavu Serif',
+                # 'serif': 'Times New Roman',
+                'size': 15}
+
+    ax.set_xlabel("Epoch", fontdict=fontdict)
+    ax.set_ylabel("Geometric Loss", fontdict=fontdict)
+    ax.tick_params(axis='both', which='major', labelsize=15)
 
     for model, loss in losses.items():
         if loss:
@@ -145,14 +150,14 @@ def plot_loss_curves():
     mean_pumap_loss, std_pumap_loss = calc_pumap_geom_loss()
     # mean_pumap_loss, std_pumap_loss = [100], [2]
 
-    ax.errorbar(150, mean_pumap_loss, yerr=std_pumap_loss, label="UMAP", color="darkgoldenrod", capsize=10,
+    ax.errorbar(150, mean_pumap_loss, yerr=std_pumap_loss, label="UMAP AE", color="darkgoldenrod", capsize=10,
                 elinewidth=2, ms=10, marker=".")
 
     x_int = [0, 20, 40, 60, 80, 100, 150]
     x_str = [0, 20, 40, 60, 80, 100, "UMAP AE"]
 
-    ax.set_xticks(x_int)
-    ax.set_xticklabels(x_str)
+    ax.set_xticks(x_int, fontdict=fontdict)
+    ax.set_xticklabels(x_str, fontdict=fontdict)
 
     chartBox = ax.get_position()
     # ax.set_position([0, 0, chartBox.width, chartBox.height])
@@ -265,7 +270,7 @@ def calc_pumap_geom_loss():
 
 def create_colorbar():
     root_path = os.path.join(os.path.dirname(__file__), 'output/graphics/cbar')
-    sizes = [10, 15, 20, 25, 35]
+    sizes = [10, 15, 20, 25, 30, 35]
     # sizes = [10]
 
     for size in sizes:
@@ -277,7 +282,8 @@ def create_colorbar():
         fig = plt.figure(figsize=(2., 8))
         # ax1 = fig.add_axes([0.05, 0.75, 0.9, 0.15])
         ax1 = fig.add_axes([0.05, 0.05, 0.15, 0.9])
-
+        plt.rcParams['font.family'] = 'DeJavu Serif'
+        plt.rcParams['font.serif'] = ['Times New Roman']
         cmap_old = plt.get_cmap("turbo")
 
         minval = 0.4  # 0.2
@@ -301,7 +307,7 @@ def create_colorbar():
         cb1.ax.tick_params(labelsize=size)
         # cb1.set_label('Scaled Generalized Jacobian Determinant', size=size)
 
-        plt.savefig(path, **get_saving_kwargs())
+        plt.savefig(path, format="png", pad_inches=0, dpi=200)
 
         plt.show()
 
@@ -325,7 +331,7 @@ def create_colorbar():
         cb1.ax.set_xticklabels(["-1\n(contract)", "0\n(neutral)", " 1\n(expand)"])
         cb1.ax.tick_params(labelsize=size)
 
-        plt.savefig(path, **get_saving_kwargs())
+        plt.savefig(path, format="png", pad_inches=0, dpi=200)
 
         plt.show()
 
@@ -357,7 +363,7 @@ def create_colorbar():
         cb1.ax.set_xticklabels(["contract", "neutral", " expand"])
         cb1.ax.tick_params(labelsize=size)
 
-        plt.savefig(path, **get_saving_kwargs())
+        plt.savefig(path, format="png", pad_inches=0, dpi=200)
 
         plt.show()
 
@@ -441,4 +447,4 @@ def pullback_metric_condition():
     print("PUMAP", mean_cond_umap, std_cond_umap)
 
 
-pullback_metric_condition()
+plot_loss_curves()

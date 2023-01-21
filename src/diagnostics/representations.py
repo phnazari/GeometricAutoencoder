@@ -29,7 +29,7 @@ def plot_latent_space(model,
     latent_activations = latent_activations[perm]
     labels = labels[perm]
 
-    with_legend = False
+    with_legend = True
 
     """
     Plotting
@@ -53,6 +53,9 @@ def plot_latent_space(model,
             fig, ax = plt.subplots(figsize=(30, 5))  # 29
         else:
             fig, ax = plt.subplots(figsize=(15, 5))  # 10
+
+    plt.rcParams['font.family'] = 'DeJavu Serif'
+    plt.rcParams['font.serif'] = ['Times New Roman']
 
     ax.set_aspect("equal")
     ax.axis("off")

@@ -8,27 +8,27 @@ from evaluation import evaluate
 model_paths = []
 
 datasets = [
-    "MNIST",
-    # "Earth",
-    "FashionMNIST",
-    "CElegans",
-    "Zilionis_normalized",
-    "PBMC_new"
+    # "MNIST",
+    "Earth",
+    # "FashionMNIST",
+    # "CElegans",
+    # "Zilionis_normalized",
+    # "PBMC_new"
 ]
 
 models = [
     # "Vanilla",
     # "TopoReg",
-    # "GeomReg",
+    "GeomReg",
     # "PCA",
     # "TSNE",
     # "UMAP",
-    "ParametricUMAP"
+    # "ParametricUMAP"
 ]
 
 diagnostics = [
-    "indicatrices",
-    "determinants",
+    # "indicatrices",
+    # "determinants",
     "embedding"
 ]
 

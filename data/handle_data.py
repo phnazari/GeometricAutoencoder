@@ -58,7 +58,6 @@ def load_data(train_batch_size=128, test_batch_size=32, dataset="MNIST"):
     return train_loader, test_loader
 
 
-# TODO: move into base class of autoencoders
 def data_forward(model, test_loader):
     inputs = torch.tensor([])
     outputs = torch.tensor([])

@@ -103,7 +103,6 @@ class TrainingLoop():
                 if self.device == 'cuda':
                     img = img.cuda(non_blocking=True)
 
-                # TODO redo
                 self.on_batch_begin(remove_self(locals()))
 
                 # Set model into training mode and compute loss
@@ -119,10 +118,8 @@ class TrainingLoop():
                     geom_error += loss_components["loss.geom_error"]
 
                 # Call callbacks
-                # TODO redo
                 self.on_batch_end(remove_self(locals()))
 
-            # TODO redo
             if self.on_epoch_end(remove_self(locals())):
                 break
 
