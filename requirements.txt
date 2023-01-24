@@ -6,7 +6,7 @@ jsonpickle==1.5.2
 keopscore==2.1
 keras==2.10.0
 Keras-Preprocessing==1.1.2
-matplotlib==3.6.3
+matplotlib
 numba==0.56.2
 numpy==1.23.3
 openTSNE==0.6.2
@@ -30,3 +30,4 @@ torchvision==0.13.1
 umap-learn==0.5.3
 IPython==7.8.0
 pyreadr==0.4.7
+Basemap
