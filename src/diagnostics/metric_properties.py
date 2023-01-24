@@ -228,7 +228,8 @@ def plot_indicatrices(model,
         vector_patches, norm_vectors = rm.generate_unit_vectors(num_gon, coordinates)
         vector_patches = vector_patches.to(device)
 
-        vector_norms = torch.linalg.norm(vector_patches.view(-1, 2), dim=1)
+        vector_norms = torch.linalg.norm(vector_patches.reshape
+                                         (-1, 2), dim=1)
         max_vector_norm = torch.min(vector_norms[torch.nonzero(vector_norms)])
     else:
         # the angles
