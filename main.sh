@@ -3,10 +3,7 @@
 ## Reproduce our Results for MNIST
 
 # train a geometric autoencoder
-# bash scripts/create_eval_configs.sh
-
-source ~/.bashrc
-conda activate my_environment
+bash scripts/create_eval_configs.sh
 
 # move the results to the proper place
 mkdir experiments/train_model/evaluation/repetitions/rep1/MNIST/
@@ -26,5 +23,3 @@ python3 exp/analysis.py
 
 # evaluate the model quantitatively
 python3 scripts/load_results.py
-
-conda deactivate
