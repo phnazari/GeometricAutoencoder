@@ -38,7 +38,7 @@ bash main.sh
 
 What happens in this case, is that you first train a Geometric Autoencoder by executing
 ```
-bash scripts/create/eval/configs.sh.
+bash scripts/create_eval_configs.sh.
 ```
 The training results will be placed in a folder called "save_config", and you will have to move them to the `experiments` folder in order to proceed with the evaluation. The first run, for example, should be moved like
 
