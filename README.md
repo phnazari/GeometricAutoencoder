@@ -59,3 +59,7 @@ python3 scripts/load_results.py
 ## The Differential Geometry
 The differential geometry can be found inside directory `src/diffgeo`. Our geometric regularizer is implemented in `src/criterions.py`.
 
+
+
+## Converting ParametricUMAP (UMAP AE) to a PyTorch Model
+In order to run our novel diagnostics on a ParametricUMAP autoencoder, it needs to be converted from a TensorFlow model to a PyTorch model. This can be done via the `convert()` function in the `exp/actions.py` file.
