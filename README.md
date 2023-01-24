@@ -14,6 +14,13 @@ Create a Conda Environment
 
 ```
 conda create --name my_environment
+conda activate my_environment
+```
+
+Install `pip`, a package management software for python:
+
+```
+conda install pip
 ```
 
 Change into the project directory and install the dependencies
