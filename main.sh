@@ -6,11 +6,11 @@
 bash scripts/create_eval_configs.sh
 
 # move the results to the proper place
-mkdir experiments/train_model/evaluation/repetitions/rep1/MNIST/
-mkdir experiments/train_model/evaluation/repetitions/rep2/MNIST/
-mkdir experiments/train_model/evaluation/repetitions/rep3/MNIST/
-mkdir experiments/train_model/evaluation/repetitions/rep4/MNIST/
-mkdir experiments/train_model/evaluation/repetitions/rep5/MNIST/
+mkdir -p experiments/train_model/evaluation/repetitions/rep1/MNIST/
+mkdir -p experiments/train_model/evaluation/repetitions/rep2/MNIST/
+mkdir -p experiments/train_model/evaluation/repetitions/rep3/MNIST/
+mkdir -p experiments/train_model/evaluation/repetitions/rep4/MNIST/
+mkdir -p experiments/train_model/evaluation/repetitions/rep5/MNIST/
 
 mv save_config/1 experiments/train_model/evaluation/repetitions/rep1/MNIST/GeomReg
 mv save_config/2 experiments/train_model/evaluation/repetitions/rep2/MNIST/GeomReg
