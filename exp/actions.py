@@ -231,17 +231,15 @@ def calculate_runtime():
 
 
 def calc_pumap_geom_loss():
-    paths = []
-
-    for subdir, dirs, _ in os.walk(
-            os.path.join(os.path.dirname(__file__), '..', 'experiments/fit_competitor/evaluation/repetitions/')):
-
-        if len(subdir.split("/")) == 15 and subdir.split("/")[-1] == "ParametricUMAP" and subdir.split("/")[
-            -2] == "MNIST":
-            paths.append(os.path.join(subdir, "model_state.pth"))
+    paths = [
+        os.path.join(os.path.dirname(__file__), "..", "experiments/fit_competitor/evaluation/repetitions/rep1/MNIST/ParametricUMAP/model_state.pth"),
+        os.path.join(os.path.dirname(__file__), "..", "experiments/fit_competitor/evaluation/repetitions/rep2/MNIST/ParametricUMAP/model_state.pth"),
+        os.path.join(os.path.dirname(__file__), "..", "experiments/fit_competitor/evaluation/repetitions/rep4/MNIST/ParametricUMAP/model_state.pth"),
+        os.path.join(os.path.dirname(__file__), "..", "experiments/fit_competitor/evaluation/repetitions/rep5/MNIST/ParametricUMAP/model_state.pth"),
+    ]
 
     train_loader, _ = load_data(train_batch_size=125,
-                                test_batch_size=256,
+                                test_batch_size=125,
                                 dataset="MNIST")
 
     geom_errors = []
@@ -257,6 +255,9 @@ def calc_pumap_geom_loss():
             model.train()
             loss, loss_components = model(img)
             geom_error += loss_components["loss.geom_error"]
+
+
+        print(geom_error)
 
         geom_errors.append(geom_error)
 
