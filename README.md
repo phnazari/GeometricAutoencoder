@@ -38,7 +38,7 @@ The output will be something like `/path/to/GeometricAutoencoder`. Second, find 
 ```
 conda info
 ```
-There will be a row titled `active env location`, which will carry a value like `/path/to/my_environment`. Create a file `/path/to/my_environment/lib/pythonX.XX/site-packages/custom.pth`, where `X.XX` is your Python version. In this file, paste
+There will be a row titled `active env location`, which will carry a value like `/path/to/my_environment`. Create a file `/path/to/my_environment/lib/pythonX.XX/site-packages/custom.pth`, where `X.XX` is your Python version (which you can find out by running `python3 --version`). In this file, paste
 ```
 /path/to/GeometricAutoencoder
 ```
@@ -49,7 +49,7 @@ conda deactivate
 conda activate my_environment
 ```
 
-While TorchVision takes care of the MNIST and FashionMNIST datasets, you will have to [download](http://cb.csail.mit.edu/cb/densvis/datasets/ ) the PBMC, Zilionis and CElegans datasets yourself.
+While TorchVision takes care of the MNIST and FashionMNIST datasets, you will have to [download](http://cb.csail.mit.edu/cb/densvis/datasets/) the PBMC, Zilionis and CElegans datasets yourself.
 
 ## Reproducing the Results
 
