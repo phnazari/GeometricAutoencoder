@@ -1,7 +1,7 @@
 #!/bin/bash
 
 ###
-THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
+# THIS FILE WAS TAKEN FROM https://github.com/BorgwardtLab/topological-autoencoders
 ###
 
 # Autoencoder based
