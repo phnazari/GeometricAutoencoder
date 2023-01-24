@@ -309,8 +309,9 @@ for dataset in datasets:
     df = pd.DataFrame.from_dict(experiment_stats[dataset], orient='index')
     df = df.rename(columns=col_mapping)
 
-    # df['order'] = [7, 6, 5, 2, 3, 1]
-    df['order'] = [7, 6, 5, 4, 2, 3, 1]
+    # TODO: uncomment if all models are used
+    # df['order'] = [7, 6, 5, 4, 2, 3, 1]
+    df['order'] = [1]
 
     # columns = np.delete(columns, np.where(columns == "order"))
 
