@@ -10,7 +10,7 @@ Clone the Repository
 git clone https://github.com/Kingrimursel/GeometricAutoencoder.git
 ```
 
-Create a Conda Environment
+Create and activate a new Conda Environment
 
 ```
 conda create --name my_environment
