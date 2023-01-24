@@ -30,6 +30,25 @@ cd GeometricAutoencoder
 pip3 install -r requirements.txt
 ```
 
+Next, you want to add this project to your environment's `PYTHONPATH`. First, find out the projects path by running
+```
+pwd
+```
+The output will be something like `/path/to/GeometricAutoencoder`. Second, find out where your virtual environment was installed by running
+```
+conda info
+```
+There will be a row titled `active env location`, which will carry a value like `/path/to/my_environment`. Create a file `/path/to/my_environment/lib/pythonX.XX/site-packages/custom.pth`, where `X.XX` is your Python version. In this file, paste
+```
+/path/to/GeometricAutoencoder
+```
+
+You have successfully added the project to the `PYTHONPATH`. Finally, you will have to restart the environment:
+```
+conda deactivate
+conda activate my_environment
+```
+
 While TorchVision takes care of the MNIST and FashionMNIST datasets, you will have to [download](http://cb.csail.mit.edu/cb/densvis/datasets/ ) the PBMC, Zilionis and CElegans datasets yourself.
 
 ## Reproducing the Results
