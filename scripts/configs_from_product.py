@@ -27,10 +27,6 @@ def main():
         parameter_mapping = dict(zip(args.name, possible_parameters))
         output_filename = args.output_pattern.format(**parameter_mapping)
 
-        # print("\n")
-        # print(output_filename)
-        # print("\n")
-
         if not args.overwrite and os.path.exists(output_filename):
             print(f'Skipping... {output_filename} already exists.')
             continue

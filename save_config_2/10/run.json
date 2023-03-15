@@ -1,0 +1,186 @@
+{
+  "artifacts": [],
+  "command": "train",
+  "experiment": {
+    "base_dir": "/export/home/pnazari/workspace/AutoEncoderVisualization/exp",
+    "dependencies": [
+      "kiwisolver==1.4.4",
+      "numpy==1.23.3",
+      "pandas==1.5.0",
+      "sacred==0.8.2",
+      "torch==1.12.1"
+    ],
+    "mainfile": "train_model.py",
+    "name": "training",
+    "repositories": [
+      {
+        "commit": "425e7c30a10517eeced1677875a3282bfeb78768",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "425e7c30a10517eeced1677875a3282bfeb78768",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "425e7c30a10517eeced1677875a3282bfeb78768",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "425e7c30a10517eeced1677875a3282bfeb78768",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "425e7c30a10517eeced1677875a3282bfeb78768",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "425e7c30a10517eeced1677875a3282bfeb78768",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      }
+    ],
+    "sources": [
+      [
+        "__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "callbacks.py",
+        "_sources/callbacks_5048422a716c819cd204090eb1bf16ef.py"
+      ],
+      [
+        "ingredients/__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "ingredients/dataset.py",
+        "_sources/dataset_ed12b7257145b63269ba4c639f66f4ce.py"
+      ],
+      [
+        "ingredients/model.py",
+        "_sources/model_32f9e5432e64c748a0d7c2f7a6915be4.py"
+      ],
+      [
+        "train_model.py",
+        "_sources/train_model_02693de184468e3abf178e82165c9a34.py"
+      ]
+    ]
+  },
+  "fail_trace": [
+    "Traceback (most recent call last):\n",
+    "  File \"/export/ial-nfs/user/pnazari/miniconda3/envs/tf/lib/python3.9/site-packages/sacred/config/captured_function.py\", line 42, in captured_function\n    result = wrapped(*args, **kwargs)\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/train_model.py\", line 158, in train\n    training_loop()\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/training.py\", line 98, in __call__\n    if self.on_epoch_begin(remove_self(locals())):\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/training.py\", line 56, in on_epoch_begin\n    return self._execute_callbacks('on_epoch_begin', local_variables)\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/training.py\", line 51, in _execute_callbacks\n    stop |= bool(getattr(callback, hook)(**local_variables))\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/callbacks.py\", line 177, in on_epoch_begin\n    losses = self._compute_average_losses(model)\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/callbacks.py\", line 147, in _compute_average_losses\n    loss, loss_components = model(data)\n",
+    "  File \"/export/ial-nfs/user/pnazari/miniconda3/envs/tf/lib/python3.9/site-packages/torch/nn/modules/module.py\", line 1130, in _call_impl\n    return forward_call(*input, **kwargs)\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/models/regularized.py\", line 50, in forward\n    det_loss = self.determinant_criterion()\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/criterions.py\", line 60, in __call__\n    loss_det = self.determinant_loss()\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/criterions.py\", line 74, in determinant_loss\n    dets = self.manifold.metric_det(base_point=self.model.latent_activations)\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/diffgeo/manifolds.py\", line 67, in metric_det\n    metric_matrix = self.metric.metric_matrix(base_point=base_point)\n",
+    "  File \"/export/home/pnazari/workspace/AutoEncoderVisualization/src/diffgeo/metrics.py\", line 132, in metric_matrix\n    metric = torch.matmul(torch.transpose(J, 1, 2), J)\n",
+    "RuntimeError: Expected size for first two dimensions of batch2 tensor to be: [3500, 2] but got: [3500, 28].\n"
+  ],
+  "heartbeat": "2023-03-15T16:49:38.892008",
+  "host": {
+    "ENV": {},
+    "cpu": "Intel(R) Xeon(R) CPU E5-2683 v4 @ 2.10GHz",
+    "gpus": {
+      "driver_version": "525.89.02",
+      "gpus": [
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        },
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        },
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        },
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        },
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        },
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        },
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        },
+        {
+          "model": "Quadro P5000",
+          "persistence_mode": false,
+          "total_memory": 16384
+        }
+      ]
+    },
+    "hostname": "hgsgpu02",
+    "os": [
+      "Linux",
+      "Linux-5.4.0-139-generic-x86_64-with-glibc2.31"
+    ],
+    "python_version": "3.9.13"
+  },
+  "meta": {
+    "command": "train",
+    "options": {
+      "--beat-interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": "save_config_2",
+      "--force": false,
+      "--help": false,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print-config": false,
+      "--priority": null,
+      "--queue": false,
+      "--s3": null,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [
+        "config_filename=experiments/train_model/repetitions/rep5/experiments/train_model/best_runs/MNIST/GeomRegConv.json",
+        "experiments/train_model/best_runs/MNIST/GeomRegConv.json",
+        "rep5",
+        "evaluation.active=True",
+        "evaluation.evaluate_on=test"
+      ],
+      "help": false,
+      "with": true
+    }
+  },
+  "resources": [],
+  "result": null,
+  "start_time": "2023-03-15T16:49:36.467015",
+  "status": "FAILED",
+  "stop_time": "2023-03-15T16:49:38.899217"
+}
