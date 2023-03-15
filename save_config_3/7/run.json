@@ -1,0 +1,315 @@
+{
+  "artifacts": [],
+  "command": "train",
+  "experiment": {
+    "base_dir": "/export/home/pnazari/workspace/AutoEncoderVisualization/exp",
+    "dependencies": [
+      "kiwisolver==1.4.4",
+      "numpy==1.23.3",
+      "pandas==1.5.0",
+      "sacred==0.8.2",
+      "torch==1.12.1"
+    ],
+    "mainfile": "train_model.py",
+    "name": "training",
+    "repositories": [
+      {
+        "commit": "199701a8b00e8c67f93bd7d5f96c9248f4e75b8e",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "199701a8b00e8c67f93bd7d5f96c9248f4e75b8e",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "199701a8b00e8c67f93bd7d5f96c9248f4e75b8e",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "199701a8b00e8c67f93bd7d5f96c9248f4e75b8e",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "199701a8b00e8c67f93bd7d5f96c9248f4e75b8e",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      },
+      {
+        "commit": "199701a8b00e8c67f93bd7d5f96c9248f4e75b8e",
+        "dirty": true,
+        "url": "git://export/home/pnazari/workspace/AutoEncoderVisualization"
+      }
+    ],
+    "sources": [
+      [
+        "__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "callbacks.py",
+        "_sources/callbacks_5048422a716c819cd204090eb1bf16ef.py"
+      ],
+      [
+        "ingredients/__init__.py",
+        "_sources/__init___d41d8cd98f00b204e9800998ecf8427e.py"
+      ],
+      [
+        "ingredients/dataset.py",
+        "_sources/dataset_ed12b7257145b63269ba4c639f66f4ce.py"
+      ],
+      [
+        "ingredients/model.py",
+        "_sources/model_32f9e5432e64c748a0d7c2f7a6915be4.py"
+      ],
+      [
+        "train_model.py",
+        "_sources/train_model_02693de184468e3abf178e82165c9a34.py"
+      ]
+    ]
+  },
+  "heartbeat": "2023-03-15T20:04:52.951082",
+  "host": {
+    "ENV": {},
+    "cpu": "Intel(R) Xeon(R) Gold 6132 CPU @ 2.60GHz",
+    "gpus": {
+      "driver_version": "525.89.02",
+      "gpus": [
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        },
+        {
+          "model": "NVIDIA TITAN Xp",
+          "persistence_mode": false,
+          "total_memory": 12288
+        }
+      ]
+    },
+    "hostname": "compgpu2",
+    "os": [
+      "Linux",
+      "Linux-5.4.0-139-generic-x86_64-with-glibc2.31"
+    ],
+    "python_version": "3.9.13"
+  },
+  "meta": {
+    "command": "train",
+    "options": {
+      "--beat-interval": null,
+      "--capture": null,
+      "--comment": null,
+      "--debug": false,
+      "--enforce_clean": false,
+      "--file_storage": "save_config_3",
+      "--force": false,
+      "--help": false,
+      "--loglevel": null,
+      "--mongo_db": null,
+      "--name": null,
+      "--pdb": false,
+      "--print-config": false,
+      "--priority": null,
+      "--queue": false,
+      "--s3": null,
+      "--sql": null,
+      "--tiny_db": null,
+      "--unobserved": false,
+      "COMMAND": null,
+      "UPDATE": [
+        "config_filename=experiments/train_model/repetitions/rep2/experiments/train_model/best_runs/FashionMNIST/GeomRegConv.json",
+        "experiments/train_model/best_runs/FashionMNIST/GeomRegConv.json",
+        "rep2",
+        "evaluation.active=True",
+        "evaluation.evaluate_on=test"
+      ],
+      "help": false,
+      "with": true
+    }
+  },
+  "resources": [],
+  "result": {
+    "test_continuity": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/77hvmGpYu8/sYRZ84JQ7z8jXA6/dEbvP2O2Kr/mPu8/EBPh0wo57z+uKRj6bzTvPzSw0iGvMO8/YPcq32st7z8iNeO46irvP4NO6CZ0KO8/ULCVYg4m7z9FT51MMyTvP9mA8zZ+Iu8/dgCeAREh7z/McV8bqh/vP7zH0uNeHu8/Os3/fScd7z+48w8ODBzvP4w1FCX6Gu8/K6kRtesZ7z+Kp0u1"
+    },
+    "test_density_global": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.2545860840889135
+    },
+    "test_density_kl_global_01": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.052660682939267144
+    },
+    "test_density_kl_global_100": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 8.375622455474355e-08
+    },
+    "test_knn_recall": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/6d5xyk6krM/ArwFEhQ/vj9ApN++DpzDP0vqBDQRNsc/O6xwy0dSyj9DZkE7uiTNP6q+NMf2m88/smMjEK/r0D8QMw4Ih/HRP1UyAFRx49I/1n4/vhq/0z/Dy+aE44zUP8H1eUZQTdU/tf9CEY8F1j8W+fVDbLDWP/dY+tAFVdc/CTWas5Xu1z/9h/Tb14HYPwi62/KXCtk/YaqZtRSQ2T9kyU+S"
+    },
+    "test_mean_continuity": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.9743251755135972
+    },
+    "test_mean_knn_recall": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.2811247022535966
+    },
+    "test_mean_mrre": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.037308463188851504
+    },
+    "test_mean_neighbourhood_loss": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.7188683329004668
+    },
+    "test_mean_rank_correlation": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.20320248905260882
+    },
+    "test_mean_trustworthiness": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.9506630777643679
+    },
+    "test_mrre": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20,
+        2
+      ],
+      "values": "eJwBQAG//i6TMDBWkao/zj1oas/ukT/UFquOx5aqP/twWPjcUJM/QtSj/NaYqj9FztEzliqUPzuZj9NxmKo/ZXmllyLRlD8I06O6jp2qP+tiCJzpWJU/FK/pJRmjqj9pvPt1e8uVPxH38M1Sqao/eQ8XwBkvlj9N0AG5n7GqP4sMawWviJY/grw4t4G6qj9Xkq3L/NeWPxPK8ELXwao/B4NbN4gilz9CFJpaacqqP6tau2niaJc/eTolnBfUqj9DLxZ//KiXP6/N1bWk3ao/jfZuOnjllz+bwE64YeeqP0jz7IgOHpg/ShaCmHLxqj9bkkWRS1SYPyHCq0Ui+6o/4WRyQiCImD8P4y4XKQWrP3iSyhbfuZg/WEvk/d4Oqz9ROcvajemYP1JbB3MSGas/kzu9/6EXmT+CABzLgCOrP/0uncF7RJk/aZacRQ=="
+    },
+    "test_neighbourhood_loss": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/9f+W8mOje0/3DZUjPM37D/1jZJX5xjrP0/aG3xhMuo/t3vysFBr6T/r4dT0xrboP/AWSFD8GOg/DJ3X2CWK5z+iKFvVMAfnPwlSKXY0juY/Fj2eAGsg5j+A6WhCgLnlP+io38tPWeU/tLsD+y395D+HMol6wafkP0hxVdl3VeQ/hK0q+64I5D+843MUDb/jP27ODzKreuM/lE6WWu834z8PN1PT"
+    },
+    "test_rank_correlation": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/+ht1CPDgL8/n6ZfINVcwj+FAZ1CJlbDP8vw3GJ0vMQ/CBEEUEgBxj/QqOFosubGP5toEShZ4Mc/mRF1TTi5yD/NBUmpe3TJPyHnO/UrN8o/8PHtZPMlyz+lFROEUNHLPz+y34amjsw/Fcp6qrgmzT8d+WJaMtPNP8b9T0Ewcs4/qTilepAVzz+zh/SFCazPP2QdOepCJNA/oyTU6M5s0D+uNU8u"
+    },
+    "test_rmse": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 4.7717316994780745
+    },
+    "test_spearman_metric": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.8495409429016387
+    },
+    "test_stress": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.32597820782504816
+    },
+    "test_trustworthiness": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJzz2/u5NC76nX12XaVqT+w7e9277nZ7E97ZPxLvOxqc8s5+4/SZ56rT3tl/Yzod2ZXxzl6T3+xpXNY7+wkFz207s9/ZK7zlvNCR885e9uCtHKa8d/bcrdq8XPnv7LeXBuZsBNIrZRZoxxW8s59/0VLoG5BO0FxgmFn4zl6rZrrkbyC9KHJ/UFLRO3u7xk/xD4C0me9NZvXid/Zvs1rmBQBpAMZhTkU="
+    },
+    "training.loss": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.032630813507629294
+    },
+    "training.loss.autoencoder": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.03249987844776894
+    },
+    "training.loss.geom_error": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.0013093507281155326
+    },
+    "training.reconstruction_error": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.03249987844776894
+    }
+  },
+  "start_time": "2023-03-15T19:40:43.164401",
+  "status": "COMPLETED",
+  "stop_time": "2023-03-15T20:04:52.947342"
+}

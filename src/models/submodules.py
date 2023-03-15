@@ -164,7 +164,7 @@ class BoxAutoEncoder(AutoencoderModel):
 
 
 class ConvolutionalAutoEncoder(AutoencoderModel):
-    """100-100-100-2-100-100-100."""
+    """Convolutional autoencoder for MNIST and FashionMNIST"""
 
     def __init__(self, input_dims=(1, 28, 28), **kwargs):
         super().__init__()
@@ -198,6 +198,9 @@ class ConvolutionalAutoEncoder(AutoencoderModel):
         self.reconst_error = nn.MSELoss()
 
         self.register_hook()
+
+    def immersion(self, x):
+        return self.decoder(x).view(-1, 784)
 
     def encode(self, x):
         """Compute latent representation using convolutional autoencoder."""

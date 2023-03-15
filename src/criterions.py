@@ -18,7 +18,7 @@ class Loss:
     def __init__(self, model=None):
         # a manifold object
         self.model = model
-        pbm = PullbackMetric(2, model.decoder)
+        pbm = PullbackMetric(2, model.immersion)
         lcc = LeviCivitaConnection(2, pbm)
         self.manifold = RiemannianManifold(2, (1, 1), metric=pbm, connection=lcc)
 
