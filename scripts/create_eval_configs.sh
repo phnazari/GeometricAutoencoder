@@ -12,8 +12,7 @@ output_pattern_competitor='experiments/fit_competitor/repetitions/{rep}/{config}
 python3 scripts/configs_from_product.py exp.train_model \
   --name config \
   --set \
-  experiments/train_model/best_runs/MNIST/GeomRegConv.json \
-  experiments/train_model/best_runs/FashionMNIST/GeomRegConv.json \
+  experiments/train_model/best_runs/MNIST/GeomReg.json \
   --name rep --set rep1 rep2 rep3 rep4 rep5 \
   --name dummy --set evaluation.active=True \
   --name dummy2 --set evaluation.evaluate_on='test' \
@@ -31,4 +30,3 @@ python3 scripts/configs_from_product.py exp.train_model \
 #  --name dummy --set evaluation.active=True \
 #  --name dummy2 --set evaluation.evaluate_on='test' \
 #  --output-pattern ${output_pattern_competitor}
-
