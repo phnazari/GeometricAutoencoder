@@ -14,6 +14,8 @@ exp_runs/
 experiments/train_model/evaluation
 experiments/train_model/geometric_loss
 experiments/train_model/speed
+experiments/train_model/conv
+experiments/train_model/l1
 experiments/fit_competitor/evaluation
 experiments/fit_competitor/geometric_loss
 experiments/fit_competitor/speed
