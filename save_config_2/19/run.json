@@ -71,7 +71,7 @@
       ]
     ]
   },
-  "heartbeat": "2023-03-15T21:28:06.717695",
+  "heartbeat": "2023-03-15T22:07:04.536051",
   "host": {
     "ENV": {},
     "cpu": "Intel(R) Xeon(R) CPU E5-2683 v4 @ 2.10GHz",
@@ -162,7 +162,144 @@
     }
   },
   "resources": [],
-  "result": null,
+  "result": {
+    "test_continuity": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/48RrlDsIO8/Di91VUoK7z+JGtmGpv3uP0gnWIYg9O4/O6N/gCvs7j+qLjTT0eXuP7e/mynp3+4/708Ua8La7j/tOXCEGdbuP6MSv6Tb0e4/FCN8HOPN7j+tsBTkn8ruP4o/2++Ax+4//Pcn0NjE7j++H9FGXMLuP0OZ3B+8v+4/GAN3rW697j/CoPH+LrvuP+5gdaEFue4/NHZ9xwG37j/QWVew"
+    },
+    "test_density_global": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.23531641507597995
+    },
+    "test_density_kl_global_01": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.04611155122737456
+    },
+    "test_density_kl_global_100": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 9.189171413391054e-08
+    },
+    "test_knn_recall": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/3AlOzYC8bI/8RExJZLovT8G4IyH5FHDP2/1nPS+8cY/3/qw3qgVyj8PYmcKndfMP2AL/OXUUM8/xyk6ksu/0D+jX/m3fMLRP3e688RzttI//g5FgT6R0z9imZFUuWPUP6yx7SjxItU/mfViKCfa1T8ScWBf2IfWP+wvuycPK9c/d+/6HkfF1z8DjawP/ljYP7uif3Nk4tg/iDB+Gvdm2T+/W1Ro"
+    },
+    "test_mean_continuity": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.9638745786174464
+    },
+    "test_mean_knn_recall": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.27870055095003254
+    },
+    "test_mean_mrre": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.04061266845005078
+    },
+    "test_mean_neighbourhood_loss": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.7212943247786614
+    },
+    "test_mean_rank_correlation": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.1883274887852709
+    },
+    "test_mean_trustworthiness": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.9527677093353579
+    },
+    "test_mrre": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20,
+        2
+      ],
+      "values": "eJwBQAG//p3Byj1Ri6k/GKmD12mlmT9X4227dJepP4tWa6geUZs/G4dOPGKbqT91uDsAhlacP/XM6JV8pKk/fMf4c5QcnT9WzW9Bu6WpP8OpzEeYwZ0/I6LUbBqrqT8HX8wkQUyeP5PipRFRsqk/K4V5MjLJnj9Lge1Kl7epP2ZiMmYqOZ8/C40BLfK9qT/Nl2OYqJ+fP/Bv9UxcxKk/Hf6s64b+nz9cTLTtOMupP0DzoYKiK6A/DgMhwtDRqT/IFdK2D1SgP96io48C2Kk/NA8hNmR6oD/59DMkyt6pP0oK6fb1naA/OmSNPQXmqT9CXozmw7+gPzkD5XE67ak/1hhfJ83goD9xe4GDTPWpP5ob1E79/6A/7WAmuFf9qT9JoTJWHh6hP2gEMsSWBKo/qiCOECs7oT/3ZTA9UwyqPwYKkNYaV6E/17CYhQ=="
+    },
+    "test_neighbourhood_loss": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/yqbOLnfoe0//FSkwthC7D++ZtXnaivrP7w5I0p7Q+o/nSBcAYV66T/QdkLCCsroP7Yttsu7K+g/wNeeWRKg5z9ekmX9tR7nP1JeK6G7pOY/VfQKN1c35j8T0YkXHs7lP0BWmpSCbuU/uMBz7+ES5T+i7r3SDLzkP5yjx+9tauQ/RFB6RVYd5D+g2toke9PjP8u5bkHIjuM/jP8CQYBM4z9H1VO5"
+    },
+    "test_rank_correlation": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/1ByUmz14rs/IcjoM2d1wD/951iCvZTBP0f5o1UiysI/u+0GB6UhxD9kQ8EXECvFP3N5/Sz8B8Y/RnS+FDvuxj+W0JgJtb3HPyk5p1liesg/hOP0Ie1PyT+GdjNryfnJP4PXX5ivp8o/HeFgyhY/yz88gOCEvNnLP+zqAKmmdMw/H0aaVID9zD9oiHer54zNP0U8ns7eJs4/uARnImGtzj+imFHE"
+    },
+    "test_rmse": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 3.9707139368259514
+    },
+    "test_spearman_metric": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.774682496418495
+    },
+    "test_stress": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.34413553082335363
+    },
+    "test_trustworthiness": {
+      "byteorder": "<",
+      "dtype": "float64",
+      "py/object": "numpy.ndarray",
+      "shape": [
+        20
+      ],
+      "values": "eJwBoABf/1utMlToZ+4/cBSohtRq7j+8G0ZBiW7uP+ahrXN6cO4/OPik4UF07j9JDIZfonbuP9zUk19keO4/FBXDPKN67j89zeg7fnzuP2j6rIBAfu4/e11/Q9F/7j/QJAeYboHuP5xYkl4eg+4/GLV9MY+E7j8KuwyUzoXuP2inK1QGh+4/sw6Y3uWH7j9ghDQ6wYjuP1lJ2ybdie4/D09WZ8SK7j98YVAs"
+    },
+    "training.loss": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.0320006727008149
+    },
+    "training.loss.autoencoder": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.03192016134770321
+    },
+    "training.loss.geom_error": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.0008051139068161969
+    },
+    "training.reconstruction_error": {
+      "dtype": "float64",
+      "py/object": "numpy.float64",
+      "value": 0.03192016134770321
+    }
+  },
   "start_time": "2023-03-15T21:24:03.163430",
-  "status": "RUNNING"
+  "status": "COMPLETED",
+  "stop_time": "2023-03-15T22:07:04.530111"
 }
