@@ -9,9 +9,6 @@ import pandas as pd
 import numpy as np
 import json
 import glob
-from IPython import embed
-import sys
-from collections import defaultdict
 import collections
 
 from matplotlib import pyplot as plt
@@ -46,7 +43,6 @@ def aggregate_metrics(df, larger_is_better):
 
     for col in df.columns:
         # as pm formatting occured before, extract means:
-        print(df[col])
         means = df[col].str.split(' ', n=1, expand=True)
         means[0] = means[0].astype(float)
 
@@ -85,10 +81,12 @@ def nested_dict():
     return collections.defaultdict(nested_dict)
 
 
+subdir = "evaluation"  # "evaluation", "conv" or "l1"
+
 # CAVE: set the following paths accordingly!
 outpath = 'tex_Geom'
-path_comp = 'experiments/train_model/evaluation/repetitions'
-path_ae = 'experiments/fit_competitor/evaluation/repetitions'
+path_comp = os.path.join('experiments/train_model', subdir, 'repetitions')
+path_ae = os.path.join('experiments/fit_competitor', subdir, 'repetitions')
 
 Path(outpath).mkdir(exist_ok=True)
 
@@ -98,13 +96,13 @@ files_ae = glob.glob(path_ae + '/**/run.json', recursive=True)
 files_comp = glob.glob(path_comp + '/**/run.json', recursive=True)
 filelist = files_ae + files_comp
 
-# use non aggregated, i.e. with MSE
+# use for non aggregated, i.e. with MSE
 used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_trustworthiness',
                  'spearman_metric', '_mse', 'reconstruction']
 
 # use for aggregated, i.e. without MSE
-used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_trustworthiness',
-                 'spearman_metric']
+#used_measures = ['kl_global_01', 'kl_global_100', 'knn_recall', 'rmse', 'mean_trustworthiness',
+#                 'spearman_metric']
 
 # mean_neighbourhood_loss, mean_continuity, mean_rank_correlation, mean_mrre, stress, density_global
 
@@ -269,7 +267,7 @@ col_mapping = {'test_density_kl_global_0001': '$\dkl_{0.001}$',
 # use for non aggregated, i.e. with MSE
 order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear', 'MSE']
 # use for aggregated, i.e. without MSE
-order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear']
+# order_measures = ['$\\dkl_{0.1}$', 'kNN', '$\ell$-Trust', '$\ell$-RMSE', '$\\dkl_{100}$', 'Spear']
 
 larger_is_better = {
     '$\dkl_{0.001}$': 0,
@@ -302,15 +300,14 @@ larger_is_better = {
 rankings = []
 
 for dataset in datasets:
-    print(dataset)
     # if dataset == "Zilionis":
     #    continue
 
     df = pd.DataFrame.from_dict(experiment_stats[dataset], orient='index')
     df = df.rename(columns=col_mapping)
 
-    # df['order'] = [7, 6, 5, 2, 3, 1]
-    df['order'] = [7, 6, 5, 4, 2, 3, 1]
+    # df['order'] = [7, 6, 5, 4, 2, 3, 1]
+    df['order'] = [2, 1]
 
     # columns = np.delete(columns, np.where(columns == "order"))
 

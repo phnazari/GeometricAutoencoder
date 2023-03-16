@@ -463,7 +463,7 @@ def pullback_metric_condition():
         # perm = torch.randperm(latent_activations.shape[0], generator=generator)
         # coordinates = latent_activations[perm[:n_samples]].to(device)
 
-        pbm = PullbackMetric(2, model.decoder)
+        pbm = PullbackMetric(2, model.immersion)
         lcc = LeviCivitaConnection(2, pbm)
         rm = RiemannianManifold(2, (1, 1), metric=pbm, connection=lcc)
         # metric at the point
@@ -546,6 +546,8 @@ def hdb_scan():
 
         return the_table
 
+    found_hyperparams =  True
+
     def analyze_scores(dataset):
         van_mean_errors = []
         van_std_errors = []
@@ -557,7 +559,12 @@ def hdb_scan():
             van_std_errors_row = []
             geom_mean_errors_row = []
             geom_std_errors_row = []
+            if found_hyperparams and min_samples != 10:
+                continue
             for min_cluster_size in min_cluster_size_range:
+                if found_hyperparams and min_cluster_size != 400:
+                    continue
+                print(min_samples, min_cluster_size)
                 van_errors_entry = []
                 geom_errors_entry = []
                 for i in range(1, 6):
@@ -585,31 +592,36 @@ def hdb_scan():
                 geom_mean_errors_row.append(geom_mean_errors_entry)
                 geom_std_errors_row.append(geom_std_errors_entry)
 
-            van_mean_errors.append(van_mean_errors_row)
-            van_std_errors.append(van_std_errors_row)
-            geom_mean_errors.append(geom_mean_errors_row)
-            geom_std_errors.append(geom_std_errors_row)
+            if len(van_mean_errors_row) > 0:
+                van_mean_errors.append(van_mean_errors_row)
+                van_std_errors.append(van_std_errors_row)
+                geom_mean_errors.append(geom_mean_errors_row)
+                geom_std_errors.append(geom_std_errors_row)
 
         van_mean_errors = np.stack(van_mean_errors).round(3)
         van_std_errors = np.stack(van_std_errors).round(3)
         geom_mean_errors = np.stack(geom_mean_errors).round(3)
         geom_std_errors = np.stack(geom_std_errors).round(3)
 
-        fig, ax = plt.subplots()
-        table = plot_table(van_mean_errors, min_samples_range,
-                           min_cluster_size_range, ax=ax)
-        plt.savefig(
-            f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/{dataset}_hdb_van.png", dpi=200)
+        if not found_hyperparams:
+            fig, ax = plt.subplots()
+            table = plot_table(van_mean_errors, min_samples_range,
+                            min_cluster_size_range, ax=ax)
+            plt.savefig(
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/{dataset}_hdb_van.png", dpi=200)
 
-        fig, ax = plt.subplots()
-        table = plot_table(geom_mean_errors, min_samples_range,
-                           min_cluster_size_range, ax=ax)
-        plt.savefig(
-            f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/{dataset}_hdb_geom.png", dpi=200)
+            fig, ax = plt.subplots()
+            table = plot_table(geom_mean_errors, min_samples_range,
+                            min_cluster_size_range, ax=ax)
+            plt.savefig(
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/{dataset}_hdb_geom.png", dpi=200)
+            
+        return van_mean_errors, van_std_errors, geom_mean_errors, geom_std_errors
 
     datasets = ["MNIST", "FashionMNIST", "CElegans", "PBMC", "Zilionis"]
     for dataset in datasets:
-        analyze_scores(dataset)
+        van_mean_errors, van_std_errors, geom_mean_errors, geom_std_errors = analyze_scores(dataset)
+        print(dataset, van_mean_errors, van_std_errors, geom_mean_errors, geom_std_errors)
 
 
 def test_cluster_2():

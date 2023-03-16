@@ -12,7 +12,7 @@ import torch
 from src.diagnostics.metric_properties import plot_determinants, plot_indicatrices
 from src.diagnostics.representations import plot_latent_space
 
-from src.models.submodules import BoxAutoEncoder
+from src.models.submodules import BoxAutoEncoder, ConvolutionalAutoEncoder
 
 from data.handle_data import load_data
 from firelight.visualizers.colorization import get_distinct_colors
@@ -42,6 +42,7 @@ def evaluate(writer_dir=None,
 
     # choose Autoencoder model
     AE = BoxAutoEncoder
+    # AE = ConvolutionalAutoEncoder
 
     train_batch_size = 256
 
@@ -142,7 +143,8 @@ def evaluate(writer_dir=None,
     if model_name in ["Vanilla", "TopoReg", "GeomReg", "ParametricUMAP"]:
         # create model
         print(f"[model] move to {device}...")
-        model = AE(input_shape=input_dim, latent_dim=latent_dim, input_dims=input_dims).to(device)
+        model = AE(input_shape=input_dim, latent_dim=latent_dim,
+                   input_dims=input_dims).to(device)
         model.load(model_path)
 
         if "determinants" in used_diagnostics:
@@ -161,7 +163,8 @@ def evaluate(writer_dir=None,
                               num_gon=num_gon,
                               model_name=model_name,
                               dataset_name=dataset_name,
-                              output_path=os.path.join(image_save_path, "indicatrices.png"),
+                              output_path=os.path.join(
+                                  image_save_path, "indicatrices.png"),
                               writer=writer)
 
         if "embedding" in used_diagnostics:
@@ -192,7 +195,8 @@ def evaluate(writer_dir=None,
                                   num_gon=num_gon,
 
                                   dataset_name=dataset_name,
-                                  output_path=os.path.join(image_save_path, "indicatrices.png"),
+                                  output_path=os.path.join(
+                                      image_save_path, "indicatrices.png"),
                                   writer=writer,
                                   model_name=model_name,
                                   latent_activations=latent_activations,

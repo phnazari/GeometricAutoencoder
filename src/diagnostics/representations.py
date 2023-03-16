@@ -29,7 +29,7 @@ def plot_latent_space(model,
     latent_activations = latent_activations[perm]
     labels = labels[perm]
 
-    with_legend = True
+    with_legend = False
 
     """
     Plotting

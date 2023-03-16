@@ -40,12 +40,11 @@ def plot_determinants(model,
     perm = torch.randperm(latent_activations.shape[0], generator=generator)
     latent_activations = latent_activations[perm]
 
-    # get coordinates the determinants should be evaluated on
-    coordinates = get_coordinates(latent_activations.detach().cpu(), grid=grid, num_steps=num_steps).to(device)
+    coordinates = get_coordinates(torch.squeeze(latent_activations).detach().cpu(), grid=grid, num_steps=num_steps).to(device)
 
     if model_name != "PCA":
         # initialize diffgeo objects
-        pbm = PullbackMetric(2, model.decoder)
+        pbm = PullbackMetric(2, model.immersion)
         lcc = LeviCivitaConnection(2, pbm)
         rm = RiemannianManifold(2, (1, 1), metric=pbm, connection=lcc)
 
@@ -56,7 +55,10 @@ def plot_determinants(model,
         # calculate determinants
         determinants = None
         for coord in torch.utils.data.DataLoader(coordinates, batch_size=batch_size):
-            batch_dets = rm.metric_det(base_point=coord).detach()
+            try:
+                batch_dets = rm.metric_det(base_point=coord).detach()
+            except RuntimeError:
+                batch_dets = rm.metric_det(base_point=coord.unsqueeze(-1).unsqueeze(-1)).detach()
             if determinants is None:
                 determinants = batch_dets
             else:
@@ -90,7 +92,7 @@ def plot_determinants(model,
     # determinants_relative = dets_scaled_raw / torch.mean(dets_scaled_raw)
     dets_scaled = determinants_relative - 1
 
-    print(dataset_name, torch.min(dets_scaled), torch.max(dets_scaled))
+    # print(dataset_name, torch.min(dets_scaled), torch.max(dets_scaled))
 
     """
     PLOTTING
@@ -177,14 +179,14 @@ def plot_indicatrices(model,
     coords0 = latent_activations[idx0]
     coords0 = None
 
-    coordinates_on_data = get_coordinates(latent_activations,
+    coordinates_on_data = get_coordinates(torch.squeeze(latent_activations),
                                           grid="on_data",
                                           num_steps=num_steps,
                                           coords0=coords0,
                                           dataset_name=dataset_name,
                                           model_name=model_name).to(device)
 
-    coordinates_off_data = get_coordinates(latent_activations,
+    coordinates_off_data = get_coordinates(torch.squeeze(latent_activations),
                                            grid="off_data",
                                            num_steps=num_steps,
                                            coords0=coords0,
@@ -220,15 +222,19 @@ def plot_indicatrices(model,
 
     if not passed:
         # initialize diffgeo objects
-        pbm = PullbackMetric(2, model.decoder)
+        pbm = PullbackMetric(2, model.immersion)
         lcc = LeviCivitaConnection(2, pbm)
         rm = RiemannianManifold(2, (1, 1), metric=pbm, connection=lcc)
 
         # generate vector patches at grid points, normed in pullback metric
-        vector_patches, norm_vectors = rm.generate_unit_vectors(num_gon, coordinates)
+        try:
+            vector_patches, norm_vectors = rm.generate_unit_vectors(num_gon, coordinates)
+        except RuntimeError:
+            vector_patches, norm_vectors = rm.generate_unit_vectors(num_gon, coordinates.unsqueeze(-1).unsqueeze(-1))
+
         vector_patches = vector_patches.to(device)
 
-        vector_norms = torch.linalg.norm(vector_patches.view(-1, 2), dim=1)
+        vector_norms = torch.linalg.norm(vector_patches.reshape(-1, 2), dim=1)
         max_vector_norm = torch.min(vector_norms[torch.nonzero(vector_norms)])
     else:
         # the angles

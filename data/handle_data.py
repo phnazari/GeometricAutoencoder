@@ -68,12 +68,12 @@ def data_forward(model, test_loader):
 
         if k == 0:
             inputs = batch_features
-            outputs = output
+            # outputs = output
             latent_activations = model.latent_activations
             labels = batch_labels
         else:
             inputs = torch.vstack((inputs, batch_features))
-            outputs = torch.vstack((outputs, output))
+            # outputs = torch.vstack((outputs, output))
             latent_activations = torch.vstack((latent_activations, model.latent_activations))
 
             if batch_labels.ndim == 1:
@@ -81,6 +81,6 @@ def data_forward(model, test_loader):
             else:
                 labels = torch.vstack((labels, batch_labels))
 
-    outputs = outputs.view(-1, model.input_dim)
+    # outputs = outputs.view(-1, model.input_dim)
 
     return inputs, outputs, latent_activations, labels

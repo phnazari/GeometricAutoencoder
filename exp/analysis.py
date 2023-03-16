@@ -13,9 +13,9 @@ model_paths = []
 
 # Which Datasets should be considered for the evaluation
 datasets = [
-    "MNIST",
+    # "MNIST",
     # "Earth",
-    # "FashionMNIST",
+    "FashionMNIST",
     # "CElegans",
     # "Zilionis_normalized",
     # "PBMC_new"
@@ -23,7 +23,7 @@ datasets = [
 
 # Which models should be considered for the evaluation
 models = [
-    # "Vanilla",
+    "Vanilla",
     # "TopoReg",
     "GeomReg",
     # "PCA",
@@ -40,6 +40,8 @@ diagnostics = [
 
 base = os.path.join(os.path.dirname(__file__), '..', "experiments")
 
+subdir = "evaluation"  # "evaluation", "conv" or "l1"
+
 for dataset in datasets:
     for model in models:
         if model in ["Vanilla", "TopoReg", "GeomReg"]:
@@ -47,7 +49,7 @@ for dataset in datasets:
         else:
             dir = "fit_competitor"
 
-        model_paths.append(os.path.join(base, dir, "evaluation/repetitions/rep1", dataset, model, "model_state.pth"))
+        model_paths.append(os.path.join(base, dir, subdir, "repetitions/rep1", dataset, model, "model_state.pth"))
 
 for i, model_path in enumerate(model_paths):
     img_path = model_path.split("/")[-2]
