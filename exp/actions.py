@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import matplotlib as mpl
-from src.models.submodules import BoxAutoEncoder
+from src.models.submodules import BoxAutoEncoder, ConvolutionalAutoEncoder
 from util import get_saving_kwargs, get_sc_kwargs, get_coordinates
 import dateutil.parser
 from matplotlib import pyplot as plt
@@ -423,19 +423,21 @@ def pullback_metric_condition():
         "ParametricUMAP": []
     }
 
+    subdir = "evaluation"
+
     model_paths = [
-        os.path.join(base, "train_model", "evaluation/repetitions/rep1",
-                     "MNIST", "Vanilla", "model_state.pth"),
-        os.path.join(base, "train_model", "evaluation/repetitions/rep1",
-                     "MNIST", "GeomReg", "model_state.pth"),
-        os.path.join(base, "train_model", "evaluation/repetitions/rep1",
-                     "MNIST", "TopoReg", "model_state.pth"),
-        os.path.join(base, "fit_competitor", "evaluation/repetitions/rep1", "MNIST", "ParametricUMAP",
-                     "model_state.pth"),
+        os.path.join(base, "train_model", subdir, "repetitions/rep1",
+                     dataset_name, "Vanilla", "model_state.pth"),
+        os.path.join(base, "train_model", subdir, "repetitions/rep1",
+                     dataset_name, "GeomReg", "model_state.pth"),
+        os.path.join(base, "train_model", subdir, "repetitions/rep1",
+                     dataset_name, "TopoReg", "model_state.pth"),
+        os.path.join(base, "fit_competitor", subdir, "repetitions/rep1",
+                     dataset_name, "ParametricUMAP", "model_state.pth"),
     ]
 
     for model_path in model_paths:
-        model = BoxAutoEncoder(
+        model = ConvolutionalAutoEncoder(
             input_shape=input_dim, latent_dim=latent_dim, input_dims=input_dims).to(device)
         model.load(model_path)
 
@@ -445,12 +447,12 @@ def pullback_metric_condition():
                                     test_batch_size=256,
                                     dataset=dataset_name)
 
-        _, _, latent_activations, labels = data_forward(model, train_loader)
+        _, _, latent_activations, _ = data_forward(model, train_loader)
         latent_activations = latent_activations.detach().cpu()
 
         # if taken from a regular grid
         num_steps = 100
-        coordinates = get_coordinates(latent_activations,
+        coordinates = get_coordinates(torch.squeeze(latent_activations),
                                       grid="convex_hull",
                                       num_steps=num_steps,
                                       coords0=coords0,
@@ -492,8 +494,9 @@ def hdb_scan():
     dirnames = "~/workspace/AutoEncoderVisualization/experiments/train_model/evaluation/repetitions/"
 
     # parameter sweep
-    min_samples_range = [5, 10, 20, 50, 100, 200]
-    min_cluster_size_range = [5, 10, 20, 50, 100, 200, 400]
+    min_cluster_size_range = [4, 8, 16, 32,
+                              64, 128, 256, 512, 1024, 2048, 4096]
+    min_samples_range = [4, 8, 16, 32, 64, 128, 256, 512, 1024]
 
     # from matplotlib import pyplot as plt
     # fig, ax = plt.subplots()
@@ -546,137 +549,163 @@ def hdb_scan():
 
         return the_table
 
-    found_hyperparams =  True
+    found_hyperparams = False
 
-    def analyze_scores(dataset):
-        van_mean_errors = []
-        van_std_errors = []
-        geom_mean_errors = []
-        geom_std_errors = []
+    def analyze_scores(dataset,  model):
+        mean_errors = []
+        std_errors = []
 
         for min_samples in min_samples_range:
-            van_mean_errors_row = []
-            van_std_errors_row = []
-            geom_mean_errors_row = []
-            geom_std_errors_row = []
-            if found_hyperparams and min_samples != 10:
+            mean_errors_row = []
+            std_errors_row = []
+            if found_hyperparams and min_samples != 5:
                 continue
             for min_cluster_size in min_cluster_size_range:
-                if found_hyperparams and min_cluster_size != 400:
+                if found_hyperparams and min_cluster_size != 5:
                     continue
                 print(min_samples, min_cluster_size)
-                van_errors_entry = []
-                geom_errors_entry = []
+                errors_entry = []
                 for i in range(1, 6):
-                    vanilla_dirname = os.path.join(
-                        dirnames, f"rep{i}", dataset, "Vanilla")
-                    geom_dirname = os.path.join(
-                        dirnames, f"rep{i}", dataset, "GeomReg")
-                    van_score = get_score(
-                        vanilla_dirname, min_samples, min_cluster_size)
-                    geom_score = get_score(
-                        geom_dirname, min_samples, min_cluster_size)
+                    dirname = os.path.join(
+                        dirnames, f"rep{i}", dataset, model)
+                    score = get_score(dirname, min_samples, min_cluster_size)
 
-                    van_errors_entry.append(van_score)
-                    geom_errors_entry.append(geom_score)
+                    errors_entry.append(score)
 
-                van_errors_entry = np.array(van_errors_entry)
-                van_mean_errors_entry = np.nanmean(van_errors_entry)
-                van_std_errors_entry = np.nanstd(van_errors_entry)
-                geom_errors_entry = np.array(geom_errors_entry)
-                geom_mean_errors_entry = np.nanmean(geom_errors_entry)
-                geom_std_errors_entry = np.nanstd(geom_errors_entry)
+                errors_entry = np.array(errors_entry)
 
-                van_mean_errors_row.append(van_mean_errors_entry)
-                van_std_errors_row.append(van_std_errors_entry)
-                geom_mean_errors_row.append(geom_mean_errors_entry)
-                geom_std_errors_row.append(geom_std_errors_entry)
+                mean_errors_entry = np.nanmean(errors_entry)
+                std_errors_entry = np.nanstd(errors_entry)
 
-            if len(van_mean_errors_row) > 0:
-                van_mean_errors.append(van_mean_errors_row)
-                van_std_errors.append(van_std_errors_row)
-                geom_mean_errors.append(geom_mean_errors_row)
-                geom_std_errors.append(geom_std_errors_row)
+                mean_errors_row.append(mean_errors_entry)
+                std_errors_row.append(std_errors_entry)
 
-        van_mean_errors = np.stack(van_mean_errors).round(3)
-        van_std_errors = np.stack(van_std_errors).round(3)
-        geom_mean_errors = np.stack(geom_mean_errors).round(3)
-        geom_std_errors = np.stack(geom_std_errors).round(3)
+            if len(mean_errors_row) > 0:
+                mean_errors.append(mean_errors_row)
+                std_errors.append(std_errors_row)
+
+        mean_errors = np.stack(mean_errors).round(3)
+        std_errors = np.stack(std_errors).round(3)
 
         if not found_hyperparams:
             fig, ax = plt.subplots()
-            table = plot_table(van_mean_errors, min_samples_range,
-                            min_cluster_size_range, ax=ax)
+            table = plot_table(mean_errors, min_samples_range,
+                               min_cluster_size_range, ax=ax)
             plt.savefig(
-                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/{dataset}_hdb_van.png", dpi=200)
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/hdb/{dataset}_hdb_{model}.png", dpi=200)
 
             fig, ax = plt.subplots()
-            table = plot_table(geom_mean_errors, min_samples_range,
-                            min_cluster_size_range, ax=ax)
+            table = plot_table(mean_errors, min_samples_range,
+                               min_cluster_size_range, ax=ax)
             plt.savefig(
-                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/{dataset}_hdb_geom.png", dpi=200)
-            
-        return van_mean_errors, van_std_errors, geom_mean_errors, geom_std_errors
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/hdb/{dataset}_hdb_{model}.png", dpi=200)
+
+        return mean_errors, std_errors
 
     datasets = ["MNIST", "FashionMNIST", "CElegans", "PBMC", "Zilionis"]
+    models = ["Vanilla", "GeomReg"]
     for dataset in datasets:
-        van_mean_errors, van_std_errors, geom_mean_errors, geom_std_errors = analyze_scores(dataset)
-        print(dataset, van_mean_errors, van_std_errors, geom_mean_errors, geom_std_errors)
+        errors = []
+        for model in models:
+            mean_errors, std_errors = analyze_scores(dataset, model)
+            # errors.append(np.array(mean_errors)[~np.isnan(mean_errors)].flatten())
+            errors.append(np.array(mean_errors).flatten())
+            print(dataset, model, mean_errors, std_errors)
+
+        if not found_hyperparams:
+            errors = np.stack(errors).T
+
+            fig, ax = plt.subplots()
+            ax.violinplot(errors[:, 0][~np.isnan(errors[:, 0])], positions=[
+                          1], vert=True, showmeans=True, showextrema=True, showmedians=True, points=1000)
+            ax.violinplot(errors[:, 1][~np.isnan(errors[:, 1])], positions=[
+                          2], vert=True, showmeans=True, showextrema=True, showmedians=True, points=1000)
+            ax.set_xticks((1, 2))
+            ax.set_xticklabels(("Vanilla AE", "Geom AE"),
+                               fontdict={"fontsize": 22})
+            ax.text(1, np.nanmax(
+                errors[:, 0]), f'{100*np.nanmax(errors[:, 0]):.2f}%', ha='center', va='bottom', fontsize=22)
+            ax.text(2, np.nanmax(
+                errors[:, 1]), f'{100*np.nanmax(errors[:, 1]):.2f}%', ha='center', va='bottom', fontsize=22)
+            ax.set_ylabel("Adjusted Rand Index", fontsize=22)
+            plt.savefig(
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/hdb/{dataset}_violin.png", **get_saving_kwargs())
 
 
 def test_cluster_2():
-    dirname = "~/workspace/AutoEncoderVisualization/experiments/train_model/evaluation/repetitions/rep1/MNIST/Vanilla"
+    plot_imgs = True
+    data = "test"
+    model = "GeomReg"
 
-    df = pd.read_csv(os.path.join(dirname, "test_latents.csv"))
-    df_inp = pd.read_csv(os.path.join(dirname, "test_inputs.csv")).iloc[:, :-1]
+    dirname = f"~/workspace/AutoEncoderVisualization/experiments/train_model/evaluation/repetitions/rep1/MNIST/{model}"
+
+    # read in data
+    df = pd.read_csv(os.path.join(dirname, f"{data}_latents.csv"))
     embeddings = torch.tensor(df[["0", "1"]].values)
     labels_true = torch.tensor(df["labels"].values)
-    inputs = torch.tensor(df_inp.values)
-    inputs = inputs.view(len(inputs), 28, 28)
 
+    if data == "test":
+        df_inp = pd.read_csv(os.path.join(
+            dirname, f"{data}_inputs.csv")).iloc[:, :-1]
+        inputs = torch.tensor(df_inp.values)
+        inputs = inputs.view(len(inputs), 28, 28)
+
+    # filter out the 2s
     embeddings = embeddings[labels_true == 2]
-    inputs = inputs[labels_true == 2]
+    if data == "test":
+        inputs = inputs[labels_true == 2]
     labels_true = labels_true[labels_true == 2]
 
-    right_cluster = embeddings[:, 0] > 10
-    left_cluster = embeddings[:, 0] < 7
+    # differentiate clusters
+    if model == "Vanilla":
+        right_cluster = embeddings[:, 0] > 8
+        left_cluster = embeddings[:, 0] < 8
+    elif model == "GeomReg":
+        right_cluster = embeddings[:, 1] < 2.3
+        left_cluster = embeddings[:, 1] > 2.3
 
-    right_input = inputs[right_cluster]
-    left_input = inputs[left_cluster]
+    print(model, torch.sum(right_cluster)/torch.sum(left_cluster))
 
-    i = 40
-    fig = plt.figure(figsize=(8, 8))
+    if data == "test":
+        right_input = inputs[right_cluster]
+        left_input = inputs[left_cluster]
 
-    w = 10
-    h = 10
-    columns = 4
-    rows = 5
-    for i in range(1, columns*rows + 1):
-        img = np.random.randint(10, size=(h, w))
-        fig.add_subplot(rows, columns, i)
-        plt.imshow(right_input[np.random.randint(len(right_input))])
-    plt.savefig(
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/right_cluster.png")
+    if plot_imgs:
+        seed = 0
+        np.random.seed(seed)
+        colors = get_distinct_colors(10)
+        np.random.shuffle(colors)
+        cmap = ListedColormap(colors)
 
-    fig = plt.figure(figsize=(8, 8))
-    for i in range(1, columns*rows + 1):
-        img = np.random.randint(10, size=(h, w))
-        fig.add_subplot(rows, columns, i)
-        plt.imshow(left_input[np.random.randint(len(left_input))])
-    plt.savefig(
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/left_cluster.png")
+        fig, ax = plt.subplots()
+        ax.scatter(embeddings[:, 0], embeddings[:, 1], c="fuchsia", s=0.1)
+        ax.set_aspect('equal')
+        plt.savefig(
+            f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/cluster_2_{model}.png", **get_saving_kwargs())
 
-    seed = 0
-    np.random.seed(seed)
-    colors = get_distinct_colors(10)
-    np.random.shuffle(colors)
-    cmap = ListedColormap(colors)
+        if data == "test":
+            fig = plt.figure(figsize=(8, 8))
 
-    fig, ax = plt.subplots()
-    ax.scatter(embeddings[:, 0], embeddings[:, 1], c="fuchsia", s=0.1)
-    ax.set_aspect('equal')
-    plt.savefig(
-        "/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/cluster_2.png")
+            w = 10
+            h = 10
+            columns = 4
+            rows = 5
+            for i in range(1, columns*rows + 1):
+                img = np.random.randint(10, size=(h, w))
+                fig.add_subplot(rows, columns, i)
+                plt.imshow(right_input[np.random.randint(len(right_input))])
+                plt.axis("off")
+            plt.savefig(
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/right_cluster_{model}.png", **get_saving_kwargs())
+
+            fig = plt.figure(figsize=(8, 8))
+            for i in range(1, columns*rows + 1):
+                img = np.random.randint(10, size=(h, w))
+                fig.add_subplot(rows, columns, i)
+                plt.imshow(left_input[np.random.randint(len(left_input))])
+                plt.axis("off")
+            plt.savefig(
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/left_cluster_{model}.png", **get_saving_kwargs())
 
 
-hdb_scan()
+pullback_metric_condition()

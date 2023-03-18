@@ -81,7 +81,7 @@ def nested_dict():
     return collections.defaultdict(nested_dict)
 
 
-subdir = "evaluation"  # "evaluation", "conv" or "l1"
+subdir = "l1"  # "evaluation", "conv" or "l1"
 
 # CAVE: set the following paths accordingly!
 outpath = 'tex_Geom'
@@ -308,7 +308,7 @@ for dataset in datasets:
 
     # TODO: uncomment if all models are used
     # df['order'] = [7, 6, 5, 4, 2, 3, 1]
-    df['order'] = [1]
+    df['order'] = [1, 2]
 
     # columns = np.delete(columns, np.where(columns == "order"))
 

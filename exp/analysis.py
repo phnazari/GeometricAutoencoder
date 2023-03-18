@@ -13,9 +13,9 @@ model_paths = []
 
 # Which Datasets should be considered for the evaluation
 datasets = [
-    # "MNIST",
+    "MNIST",
     # "Earth",
-    "FashionMNIST",
+    # "FashionMNIST",
     # "CElegans",
     # "Zilionis_normalized",
     # "PBMC_new"
@@ -23,7 +23,7 @@ datasets = [
 
 # Which models should be considered for the evaluation
 models = [
-    "Vanilla",
+    # "Vanilla",
     # "TopoReg",
     "GeomReg",
     # "PCA",
