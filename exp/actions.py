@@ -494,8 +494,7 @@ def hdb_scan():
     dirnames = "~/workspace/AutoEncoderVisualization/experiments/train_model/evaluation/repetitions/"
 
     # parameter sweep
-    min_cluster_size_range = [4, 8, 16, 32,
-                              64, 128, 256, 512, 1024, 2048, 4096]
+    min_cluster_size_range = [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
     min_samples_range = [4, 8, 16, 32, 64, 128, 256, 512, 1024]
 
     # from matplotlib import pyplot as plt
@@ -563,7 +562,7 @@ def hdb_scan():
             for min_cluster_size in min_cluster_size_range:
                 if found_hyperparams and min_cluster_size != 5:
                     continue
-                print(min_samples, min_cluster_size)
+
                 errors_entry = []
                 for i in range(1, 6):
                     dirname = os.path.join(
@@ -610,10 +609,14 @@ def hdb_scan():
             mean_errors, std_errors = analyze_scores(dataset, model)
             # errors.append(np.array(mean_errors)[~np.isnan(mean_errors)].flatten())
             errors.append(np.array(mean_errors).flatten())
-            print(dataset, model, mean_errors, std_errors)
+            # print(dataset, model, mean_errors, std_errors)
 
         if not found_hyperparams:
             errors = np.stack(errors).T
+
+            print("\n\n\n")
+            print(dataset, np.sum(errors[:, 0] < errors[:, 1]), len(errors), np.sum(errors[:, 0] < errors[:, 1]) / len(errors))
+            print("\n\n\n")
 
             fig, ax = plt.subplots()
             ax.violinplot(errors[:, 0][~np.isnan(errors[:, 0])], positions=[
@@ -637,6 +640,8 @@ def test_cluster_2():
     data = "test"
     model = "GeomReg"
 
+    digit = 5
+
     dirname = f"~/workspace/AutoEncoderVisualization/experiments/train_model/evaluation/repetitions/rep1/MNIST/{model}"
 
     # read in data
@@ -651,18 +656,29 @@ def test_cluster_2():
         inputs = inputs.view(len(inputs), 28, 28)
 
     # filter out the 2s
-    embeddings = embeddings[labels_true == 2]
+    embeddings = embeddings[labels_true == digit]
     if data == "test":
-        inputs = inputs[labels_true == 2]
-    labels_true = labels_true[labels_true == 2]
+        inputs = inputs[labels_true == digit]
+    labels_true = labels_true[labels_true == digit]
 
     # differentiate clusters
     if model == "Vanilla":
-        right_cluster = embeddings[:, 0] > 8
-        left_cluster = embeddings[:, 0] < 8
+        if digit == 2:
+            right_cluster = embeddings[:, 0] > 8
+            left_cluster = embeddings[:, 0] < 8
+        elif digit == 5:
+            right_cluster = embeddings[:, 1] > 0.2
+            left_cluster = embeddings[:, 1] < 0.2
     elif model == "GeomReg":
-        right_cluster = embeddings[:, 1] < 2.3
-        left_cluster = embeddings[:, 1] > 2.3
+        if digit == 2:
+            right_cluster = embeddings[:, 1] < 2.3
+            left_cluster = embeddings[:, 1] > 2.3
+        else:
+            right_cluster = embeddings[:, 0] > 3.3
+            left_cluster = embeddings[:, 0] < 3.3
+    elif model == "TopoReg":
+        right_cluster = embeddings[:, 1] < 0.1
+        left_cluster = embeddings[:, 1] > 0.1
 
     print(model, torch.sum(right_cluster)/torch.sum(left_cluster))
 
@@ -671,7 +687,7 @@ def test_cluster_2():
         left_input = inputs[left_cluster]
 
     if plot_imgs:
-        seed = 0
+        seed = 2
         np.random.seed(seed)
         colors = get_distinct_colors(10)
         np.random.shuffle(colors)
@@ -681,7 +697,7 @@ def test_cluster_2():
         ax.scatter(embeddings[:, 0], embeddings[:, 1], c="fuchsia", s=0.1)
         ax.set_aspect('equal')
         plt.savefig(
-            f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/cluster_2_{model}.png", **get_saving_kwargs())
+            f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/{digit}cluster/cluster_{digit}_{model}.png", **get_saving_kwargs())
 
         if data == "test":
             fig = plt.figure(figsize=(8, 8))
@@ -696,7 +712,7 @@ def test_cluster_2():
                 plt.imshow(right_input[np.random.randint(len(right_input))])
                 plt.axis("off")
             plt.savefig(
-                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/right_cluster_{model}.png", **get_saving_kwargs())
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/{digit}cluster/right_cluster_{model}.png", **get_saving_kwargs())
 
             fig = plt.figure(figsize=(8, 8))
             for i in range(1, columns*rows + 1):
@@ -705,7 +721,7 @@ def test_cluster_2():
                 plt.imshow(left_input[np.random.randint(len(left_input))])
                 plt.axis("off")
             plt.savefig(
-                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/2cluster/left_cluster_{model}.png", **get_saving_kwargs())
+                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/{digit}cluster/left_cluster_{model}.png", **get_saving_kwargs())
 
 
-pullback_metric_condition()
+hdb_scan()
