@@ -7,7 +7,7 @@ This repository provides the code for the paper "Geometric Autoencoders: What Yo
 Clone the Repository
 
 ```
-git clone https://github.com/Kingrimursel/GeometricAutoencoder.git
+git clone https://github.com/phnazari/GeometricAutoencoder.git
 ```
 
 Create and activate a new Conda Environment
