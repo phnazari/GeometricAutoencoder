@@ -493,24 +493,12 @@ def pullback_metric_condition():
 def hdb_scan():
     dirnames = "~/workspace/AutoEncoderVisualization/experiments/train_model/evaluation/repetitions/"
 
-    # parameter sweep
-    min_cluster_size_range = [4, 8, 16, 32, 64, 128, 256, 512, 1024, 2048, 4096]
-    min_samples_range = [4, 8, 16, 32, 64, 128, 256, 512, 1024]
-
-    # from matplotlib import pyplot as plt
-    # fig, ax = plt.subplots()
-    # ax.scatter(embeddings[:, 0], embeddings[:, 1], c=labels_true, s=0.1)
-    # ax.set_aspect('equal')
-    # plt.savefig(
-    #    "/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/stuff")
-
-    def get_score(dirname, min_samples, min_cluster_size):
+    def get_score(dirname):
         df = pd.read_csv(os.path.join(dirname, "test_latents.csv"))
         embeddings = torch.tensor(df[["0", "1"]].values)
         labels_true = torch.tensor(df["labels"].values)
 
-        clusterer = hdbscan.HDBSCAN(
-            min_samples=min_samples, min_cluster_size=min_cluster_size, approx_min_span_tree=False)
+        clusterer = hdbscan.HDBSCAN(approx_min_span_tree=False)
 
         clusterer.fit(embeddings)
 
@@ -530,110 +518,26 @@ def hdb_scan():
 
         return score
 
-    # function that takes a numpy array, converts it to a pandas dataframe and plots the table
-    def plot_table(data, row_labels, col_labels, ax=None, **kwargs):
-        if not ax:
-            ax = plt.gca()
-
-        # hide axes
-        ax.xaxis.set_visible(False)
-        ax.yaxis.set_visible(False)
-
-        # plot the table
-        the_table = ax.table(cellText=data, rowLabels=row_labels,
-                             colLabels=col_labels, loc='center', **kwargs)
-
-        # adjust layout
-        ax.figure.subplots_adjust(left=0.2, bottom=0.2)
-
-        return the_table
-
-    found_hyperparams = False
-
-    def analyze_scores(dataset,  model):
-        mean_errors = []
-        std_errors = []
-
-        for min_samples in min_samples_range:
-            mean_errors_row = []
-            std_errors_row = []
-            if found_hyperparams and min_samples != 5:
-                continue
-            for min_cluster_size in min_cluster_size_range:
-                if found_hyperparams and min_cluster_size != 5:
-                    continue
-
-                errors_entry = []
-                for i in range(1, 6):
-                    dirname = os.path.join(
-                        dirnames, f"rep{i}", dataset, model)
-                    score = get_score(dirname, min_samples, min_cluster_size)
-
-                    errors_entry.append(score)
-
-                errors_entry = np.array(errors_entry)
-
-                mean_errors_entry = np.nanmean(errors_entry)
-                std_errors_entry = np.nanstd(errors_entry)
-
-                mean_errors_row.append(mean_errors_entry)
-                std_errors_row.append(std_errors_entry)
-
-            if len(mean_errors_row) > 0:
-                mean_errors.append(mean_errors_row)
-                std_errors.append(std_errors_row)
-
-        mean_errors = np.stack(mean_errors).round(3)
-        std_errors = np.stack(std_errors).round(3)
-
-        if not found_hyperparams:
-            fig, ax = plt.subplots()
-            table = plot_table(mean_errors, min_samples_range,
-                               min_cluster_size_range, ax=ax)
-            plt.savefig(
-                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/hdb/{dataset}_hdb_{model}.png", dpi=200)
-
-            fig, ax = plt.subplots()
-            table = plot_table(mean_errors, min_samples_range,
-                               min_cluster_size_range, ax=ax)
-            plt.savefig(
-                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/hdb/{dataset}_hdb_{model}.png", dpi=200)
-
-        return mean_errors, std_errors
-
     datasets = ["MNIST", "FashionMNIST", "CElegans", "PBMC", "Zilionis"]
     models = ["Vanilla", "GeomReg"]
     for dataset in datasets:
-        errors = []
         for model in models:
-            mean_errors, std_errors = analyze_scores(dataset, model)
+            scores = []
+            for i in range(1, 6):
+                dirname = os.path.join(dirnames, f"rep{i}", dataset, model)
+                score = get_score(dirname)
+                scores.append(score)
+                # mean_errors, std_errors = analyze_scores(dataset, model)
+
+            scores = np.array(scores)
+            mean_score = np.mean(scores)
+            std_score = np.std(scores)
+
+            print(dataset, model, mean_score, std_score)
+            
             # errors.append(np.array(mean_errors)[~np.isnan(mean_errors)].flatten())
-            errors.append(np.array(mean_errors).flatten())
+            # errors.append(np.array(mean_errors).flatten())
             # print(dataset, model, mean_errors, std_errors)
-
-        if not found_hyperparams:
-            errors = np.stack(errors).T
-
-            print("\n\n\n")
-            print(dataset, np.sum(errors[:, 0] < errors[:, 1]), len(errors), np.sum(errors[:, 0] < errors[:, 1]) / len(errors))
-            print("\n\n\n")
-
-            fig, ax = plt.subplots()
-            ax.violinplot(errors[:, 0][~np.isnan(errors[:, 0])], positions=[
-                          1], vert=True, showmeans=True, showextrema=True, showmedians=True, points=1000)
-            ax.violinplot(errors[:, 1][~np.isnan(errors[:, 1])], positions=[
-                          2], vert=True, showmeans=True, showextrema=True, showmedians=True, points=1000)
-            ax.set_xticks((1, 2))
-            ax.set_xticklabels(("Vanilla AE", "Geom AE"),
-                               fontdict={"fontsize": 22})
-            ax.text(1, np.nanmax(
-                errors[:, 0]), f'{100*np.nanmax(errors[:, 0]):.2f}%', ha='center', va='bottom', fontsize=22)
-            ax.text(2, np.nanmax(
-                errors[:, 1]), f'{100*np.nanmax(errors[:, 1]):.2f}%', ha='center', va='bottom', fontsize=22)
-            ax.set_ylabel("Adjusted Rand Index", fontsize=22)
-            plt.savefig(
-                f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/hdb/{dataset}_violin.png", **get_saving_kwargs())
-
 
 def test_cluster_2():
     plot_imgs = True
@@ -671,8 +575,8 @@ def test_cluster_2():
             left_cluster = embeddings[:, 1] < 0.2
     elif model == "GeomReg":
         if digit == 2:
-            right_cluster = embeddings[:, 1] < 2.3
-            left_cluster = embeddings[:, 1] > 2.3
+            left_cluster = embeddings[:, 1] < 2.3
+            right_cluster = embeddings[:, 1] > 2.3
         else:
             right_cluster = embeddings[:, 0] > 3.3
             left_cluster = embeddings[:, 0] < 3.3
@@ -709,7 +613,7 @@ def test_cluster_2():
             for i in range(1, columns*rows + 1):
                 img = np.random.randint(10, size=(h, w))
                 fig.add_subplot(rows, columns, i)
-                plt.imshow(right_input[np.random.randint(len(right_input))])
+                plt.imshow(right_input[np.random.randint(len(right_input))], cmap="gray", vmin=0, vmax=1)
                 plt.axis("off")
             plt.savefig(
                 f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/{digit}cluster/right_cluster_{model}.png", **get_saving_kwargs())
@@ -718,7 +622,7 @@ def test_cluster_2():
             for i in range(1, columns*rows + 1):
                 img = np.random.randint(10, size=(h, w))
                 fig.add_subplot(rows, columns, i)
-                plt.imshow(left_input[np.random.randint(len(left_input))])
+                plt.imshow(left_input[np.random.randint(len(left_input))], cmap="gray", vmin=0, vmax=1)
                 plt.axis("off")
             plt.savefig(
                 f"/export/home/pnazari/workspace/AutoEncoderVisualization/exp/output/{digit}cluster/left_cluster_{model}.png", **get_saving_kwargs())

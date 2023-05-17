@@ -56,7 +56,7 @@ def get_saving_kwargs():
     kwargs = {
         "format": "png",
         "pad_inches": 0,
-        "dpi": 120
+        "dpi": 100
     }
 
     return kwargs
