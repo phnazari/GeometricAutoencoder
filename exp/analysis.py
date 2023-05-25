@@ -13,29 +13,29 @@ model_paths = []
 
 # Which Datasets should be considered for the evaluation
 datasets = [
-    #"MNIST",
-    #"Earth",
-    # "FashionMNIST",
-    # "CElegans",
-    # "Zilionis_normalized",
+    # "MNIST",
+    # "Earth",
+    "FashionMNIST",
+    "CElegans",
+    "Zilionis_normalized",
     #"PBMC_new",
-    "PBMC"
+    #"PBMC"
 ]
 
 # Which models should be considered for the evaluation
 models = [
     "Vanilla",
-    "TopoReg",
+    #"TopoReg",
     "GeomReg",
-    "PCA",
-    "TSNE",
-    "UMAP",
-    "ParametricUMAP"
+    #"PCA",
+    #"TSNE",
+    #"UMAP",
+    #"ParametricUMAP"
 ]
 
 diagnostics = [
-    "indicatrices",
-    "determinants",
+    #"indicatrices",
+    #"determinants",
     "embedding"
 ]
 
