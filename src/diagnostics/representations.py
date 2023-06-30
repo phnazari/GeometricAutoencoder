@@ -45,8 +45,8 @@ def plot_latent_space(model,
             fig, ax = plt.subplots(figsize=(15, 5))  # 10
         elif dataset_name == "FashionMNIST":
             fig, ax = plt.subplots(figsize=(15, 5))  # 12
-        elif dataset_name == "PBMC":
-            fig, ax = plt.subplots(figsize=(17, 5))  # 17
+        elif dataset_name == "PBMC_new":
+            fig, ax = plt.subplots(figsize=(20, 5))  # 17
         elif dataset_name == "Zilionis":
             fig, ax = plt.subplots(figsize=(15, 5))  # 15
         elif dataset_name == "CElegans":
@@ -76,7 +76,7 @@ def plot_latent_space(model,
             ax.set_position([0, 0, chartBox.width, chartBox.height])
 
             # string_labels = Earth().transform_labels(labels)
-            string_labels = ["Africa", "Europe + Russia", "Asia", "North America", "Australia", "South America"]
+            string_labels = ["Africa", "Asia without Russia", "Europe with Russia", "North America", "Australia", "South America"]
             legend = ax.legend(handles, string_labels, loc="center left", bbox_to_anchor=(1.5, 0.5), fontsize=22,
                                markerscale=2)
         elif dataset_name == "Zilionis":
@@ -89,7 +89,7 @@ def plot_latent_space(model,
                 os.path.join(os.path.dirname(__file__), '../..', "data/raw/zilionis"))
             legend = ax.legend(handles, string_labels, loc="center left", bbox_to_anchor=(1, 0.5), ncol=2, fontsize=22,
                                markerscale=2)
-        elif dataset_name == "PBMC":
+        elif dataset_name == "PBMC_new":
             handles, _ = scatter.legend_elements(num=None)
 
             chartBox = ax.get_position()
@@ -97,6 +97,7 @@ def plot_latent_space(model,
 
             string_labels = PBMC().transform_labels(
                 os.path.join(os.path.dirname(__file__), '../..', "data/raw/pbmc"))
+
             legend = ax.legend(handles, string_labels, loc="center left", bbox_to_anchor=(1, 0.5), fontsize=22,
                                markerscale=2, ncol=2)
         elif dataset_name == "CElegans":

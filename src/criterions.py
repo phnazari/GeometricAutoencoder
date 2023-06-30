@@ -70,13 +70,13 @@ class DeterminantLoss(Loss):
             The determinant loss
         """
 
-        # calculate the generalized jacobian determinant
-        dets = self.manifold.metric_det(base_point=self.model.latent_activations)
+        # calculate the logarithm of the generalized jacobian determinant
+        log_dets = self.manifold.metric_logdet(base_point=self.model.latent_activations)
 
-        # noinspection PyTypeChecker
-        log_dets = torch.where((dets > LOWER_EPSILON) & (dets < UPPER_EPSILON),
-                               torch.log10(dets),
-                               torch.ones_like(dets))
+        # replace nan values with a small number
+        #EPSILON = 1e-9
+        #torch.nan_to_num(log_dets, nan=EPSILON, posinf=EPSILON, neginf=EPSILON)
+        torch.nan_to_num(log_dets, nan=1., posinf=1., neginf=1.)
 
         # calculate the variance of the logarithm of the generalized jacobian determinant
         raw_loss = torch.var(log_dets)

@@ -69,6 +69,20 @@ class RiemannianManifold(Manifold):
         det = torch.linalg.det(metric_matrix)
 
         return det
+    
+    def metric_logdet(self, base_point=None):
+        """
+        Calculate the log determinant of the metric matrix at base_point
+        :param base_points: the points under consideration
+        :param metric_matrix: the metric at point base_point
+        :return: the determinant
+        """
+
+        metric_matrix = self.metric.metric_matrix(base_point=base_point)
+
+        logdet = torch.logdet(metric_matrix)
+
+        return logdet
 
     def riemannian_curvature_tensor(self, base_point=None):
         """

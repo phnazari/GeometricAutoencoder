@@ -13,18 +13,18 @@ model_paths = []
 
 # Which Datasets should be considered for the evaluation
 datasets = [
-    # "MNIST",
-    # "Earth",
-    "FashionMNIST",
-    "CElegans",
-    "Zilionis_normalized",
+    "MNIST",
+    #"Earth",
+    #"FashionMNIST",
+    #"CElegans",
+    #"Zilionis_normalized",
     #"PBMC_new",
     #"PBMC"
 ]
 
 # Which models should be considered for the evaluation
 models = [
-    "Vanilla",
+    #"Vanilla",
     #"TopoReg",
     "GeomReg",
     #"PCA",
@@ -35,8 +35,8 @@ models = [
 
 diagnostics = [
     #"indicatrices",
-    #"determinants",
-    "embedding"
+    "determinants",
+    #"embedding"
 ]
 
 base = os.path.join(os.path.dirname(__file__), '..', "experiments")

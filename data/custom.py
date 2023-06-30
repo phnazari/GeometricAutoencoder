@@ -168,7 +168,7 @@ class Earth(CustomDataset):
             }
         )
 
-        world = geopandas.read_file(geopandas.datasets.get_path('naturalearth_lowres'))
+        world = geopandas.read_file(geopandas.datasets.get_path('naturalearth'))
         gdf = geopandas.GeoDataFrame(df, geometry=geopandas.points_from_xy(df.longitude, df.latitude))
 
         results = geopandas.sjoin(gdf, world, how="left")
