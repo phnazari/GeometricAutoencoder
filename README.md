@@ -1,6 +1,6 @@
 # Geometric Autoencoder
 
-This repository provides the code for the paper "Geometric Autoencoders: What You See is What You Decode"
+This repository provides the code for the **ICML 2023** paper [Geometric Autoencoders - What You See is What You Decode](https://proceedings.mlr.press/v202/nazari23a.html).
 
 ## Getting Started
 
