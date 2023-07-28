@@ -89,3 +89,16 @@ The differential geometry can be found inside directory `src/diffgeo`. Our geome
 
 ## Converting ParametricUMAP (UMAP AE) to a PyTorch Model
 In order to run our novel diagnostics on a ParametricUMAP autoencoder, it needs to be converted from a TensorFlow model to a PyTorch model. This can be done via the `convert()` function in the `exp/actions.py` file.
+
+
+# Bibtex
+If you use our work, please cite the following publication:
+
+
+    @InProceedings{pmlr-v202-nazari23a,
+      title = {Geometric Autoencoders - What You See is What You Decode},
+      author = {Nazari, Philipp and Damrich, Sebastian and Hamprecht, Fred A},
+      booktitle = {Proceedings of the 40th International Conference on Machine Learning},
+      year = {2023},
+      volume = {202},
+      }
